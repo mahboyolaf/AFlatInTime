@@ -3,7 +3,11 @@ import time
 clock = pygame.time.Clock()
 
 pygame.init()
-
+pygame.mixer.init()
+pygame.mixer.music.load("Theme1.mp3")
+pygame.mixer.music.set_volume(0.4)
+pygame.mixer.music.play()
+#pygame.mixer.music.fadeout(5000)
 BGCOLOUR=(88,159,223)
 screen=pygame.display.set_mode((480*2,320*2))
 
@@ -13,6 +17,7 @@ class GameSprite:
         self.x=x
         self.y=y
         self.image= pygame.image.load(filename)
+        self.rect = self.image.get_rect()
 
 class Map(GameSprite):
     def __init__(self,filename):
@@ -24,6 +29,7 @@ class Map(GameSprite):
         screen.fill(BGCOLOUR)
         screen.blit(self.image,(0,0))
         self.drawplatform1(224,192)
+
         self.drawplatform1(576,256)
         self.drawplatform1(384,256)
         #224,192
@@ -34,6 +40,7 @@ class Map(GameSprite):
         platform1_surface.fill(BGCOLOUR)
         platform1_surface.blit(self.platform1,(0,0))
         screen.blit(platform1_surface,(x,y))
+        self.platform1=platform1_surface
 
 
 
@@ -57,6 +64,9 @@ class HatKid(GameSprite):
         self.canjump= True
     def update(self,keyspressedlisted):
 
+        if self.rect.colliderect(p1):
+            print ("collidead",p1.x,p1.y)
+        print (self.x,self.y,"hatkid")
         if self.yspeed <= 5:
             self.yspeed +=0.2
         else:
@@ -112,13 +122,20 @@ class Image(Rectangle):
 hatkid=HatKid("sprite/HatKid/walk1.png")
 map1=Map("map64.png")
 game=True
+p1= None
 while game:
-    
+
     keyspressedlisted=pygame.key.get_pressed()
     map1.update()
+
+    p1=map1.platform1.get_rect()
+    hk=hatkid.rect
+    print(p1.x,p1.y,p1.height,p1.width)
+    print(hk.x,hk.y,hk.height,hk.width)
     hatkid.update(keyspressedlisted)
     clock.tick(60)
     pygame.display.update()
+
     for event in (pygame.event.get()):
         if (pygame.KEYDOWN == event.type and event.key == pygame.K_ESCAPE) or event.type == pygame.QUIT:
             game=False
