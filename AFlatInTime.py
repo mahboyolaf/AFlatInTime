@@ -1,16 +1,27 @@
 import pygame
 import time
+import os
+import random
 clock = pygame.time.Clock()
-
 pygame.init()
 pygame.mixer.init()
 pygame.mixer.music.load("Theme1.mp3")
-pygame.mixer.music.set_volume(0.4)
+pygame.mixer.music.set_volume(0.1)
 pygame.mixer.music.play()
 #pygame.mixer.music.fadeout(5000)
 BGCOLOUR=(88,159,223)
 screen=pygame.display.set_mode((480*2,320*2))
+jumpsoundeffects= []
+doublejumpsoundeffects= []
+for file in os.listdir("sounds/jumps"):
 
+    sfx=pygame.mixer.Sound("sounds/jumps/"+file)
+    sfx.set_volume(0.25)
+    jumpsoundeffects.append(sfx)
+for file in os.listdir("sounds/doublejumps"):
+    sfx=pygame.mixer.Sound("sounds/doublejumps/"+file)
+    sfx.set_volume(0.25)
+    doublejumpsoundeffects.append(sfx)
 
 class GameSprite:
     def __init__(self,x,y,filename):
@@ -47,7 +58,7 @@ class Map(GameSprite):
 class HatKid(GameSprite):
     def __init__(self,filename):
         super().__init__(0,0,filename)
-    
+        
         self.walk1= pygame.image.load("sprite/HatKid/walk1.png")
         self.walk2= pygame.image.load("sprite/HatKid/walk2.png")
         self.standing= pygame.image.load("sprite/HatKid/standing.png")
@@ -64,9 +75,10 @@ class HatKid(GameSprite):
         self.canjump= True
     def update(self,keyspressedlisted):
 
-        if self.rect.colliderect(p1):
-            print ("collidead",p1.x,p1.y)
-        print (self.x,self.y,"hatkid")
+        
+        #if self.rect.colliderect(p1):
+        #    print ("collidead",p1.x,p1.y)
+        #print (self.x,self.y,"hatkid")
         if self.yspeed <= 5:
             self.yspeed +=0.2
         else:
@@ -86,6 +98,14 @@ class HatKid(GameSprite):
                 self.yspeed =-5
                 self.jumps+=1
                 self.canjump= False
+                if self.jumps==1:
+                    randomnumber=random.randint(0,13)
+                    jumpsoundeffects[randomnumber].play()
+                    print(randomnumber)
+                if self.jumps==2:
+                    randomnumber=random.randint(0,1)
+                    doublejumpsoundeffects[randomnumber].play()
+                    print(randomnumber)
         else:
             self.canjump=True
 
@@ -98,7 +118,7 @@ class HatKid(GameSprite):
         if keyspressedlisted[pygame.K_a]:
             self.x -=3
 
-        print(self.yspeed,self.y,self.jumps,self.canjump)
+        #print(self.yspeed,self.y,self.jumps,self.canjump)
         self.y+=self.yspeed
 
         screen.blit(self.walk1,(self.x,self.y))
@@ -130,8 +150,8 @@ while game:
 
     p1=map1.platform1.get_rect()
     hk=hatkid.rect
-    print(p1.x,p1.y,p1.height,p1.width)
-    print(hk.x,hk.y,hk.height,hk.width)
+    #print(p1.x,p1.y,p1.height,p1.width)
+    #print(hk.x,hk.y,hk.height,hk.width)
     hatkid.update(keyspressedlisted)
     clock.tick(60)
     pygame.display.update()
