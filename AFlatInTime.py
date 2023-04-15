@@ -63,8 +63,8 @@ class HatKid(GameSprite):
             walk= pygame.image.load("sprite/HatKid/new_sprite/walk"+str(counter)+".png")
             walk= pygame.transform.scale(walk,(64,64))
             self.walks.append(walk)
-        self.idle= pygame.image.load("sprite/HatKid/new_sprite/idle.png")
-        self.idle=pygame.transform.scale(self.idle,(64,64))
+        self.idle1= pygame.image.load("sprite/HatKid/new_sprite/idle1.png")
+        self.idle1=pygame.transform.scale(self.idle,(64,64))
         self.direction="right"
         self.x_speed = 0
         #self.standing= pygame.image.load("sprite/HatKid/standing.png")
