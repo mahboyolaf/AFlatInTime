@@ -64,7 +64,7 @@ class HatKid(GameSprite):
             walk= pygame.transform.scale(walk,(64,64))
             self.walks.append(walk)
         self.idle1= pygame.image.load("sprite/HatKid/new_sprite/idle1.png")
-        self.idle1=pygame.transform.scale(self.idle,(64,64))
+        self.idle1=pygame.transform.scale(self.idle1,(64,64))
         self.direction="right"
         self.x_speed = 0
         #self.standing= pygame.image.load("sprite/HatKid/standing.png")
@@ -158,10 +158,10 @@ class HatKid(GameSprite):
     def swap(self):
         self.x_speed=self.x_speed*0.9
         if self.direction=="right":
-            screen.blit(self.idle,(self.x,self.y))
+            screen.blit(self.idle1,(self.x,self.y))
             self.x += self.x_speed
         if self.direction=="left":
-            screen.blit(pygame.transform.flip(self.idle,True,False),(self.x,self.y))
+            screen.blit(pygame.transform.flip(self.idle1,True,False),(self.x,self.y))
             self.x += self.x_speed
 
 

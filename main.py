@@ -24,10 +24,10 @@ map1= sprites.Map("map64.png",screen)
 game=True
 while game:
     map1.update()
-    hatkid.update()
+    hatkid.update()      
     clock.tick(constants.FPS)
     pygame.display.update()
-    
+     
     for event in (pygame.event.get()):
         if (pygame.KEYDOWN == event.type and event.key == pygame.K_ESCAPE) or event.type == pygame.QUIT:
                 game=False

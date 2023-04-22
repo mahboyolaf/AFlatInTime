@@ -1,3 +1,6 @@
+import set_up
+import pygame
+
 SCREEN_WIDTH,SCREEN_HEIGHT=480*2,320*2
 BGCOLOUR=(88,159,223)
 FPS=60
@@ -5,3 +8,9 @@ HATKIDSIZEWALK=64,64
 HATKIDSIZEIDLE=64,64
 HATKIDSIZECLIMB=64,64
 HATKIDSIZEDIVE=64,64
+MAXSPEED=3
+X_ACCELERATION=0.1
+MAXYSPEED=5
+pygame.mixer.init()
+JUMP_SFX=set_up.sfx("sounds/jumps/",0.1)
+DOUBLE_JUMP_SFX=set_up.sfx("sounds/doublejumps/",0.25)

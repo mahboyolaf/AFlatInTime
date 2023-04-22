@@ -1,6 +1,6 @@
 import constants
 import pygame
-
+import random
 
 
 
@@ -42,7 +42,7 @@ class HatKid(GameSprite):
 
         super().__init__(0,0,filename,screen)
         self.walks=[]
-
+        
         self.walkright=self.load_walk("sprite/HatKid/new_sprite","right")
         self.walkleft=self.load_walk("sprite/HatKid/new_sprite","left")
         self.idleright=self.load_idle("sprite/HatKid/new_sprite","right")
@@ -52,13 +52,15 @@ class HatKid(GameSprite):
         self.climbright=self.load_climb("sprite/HatKid/new_sprite","right")
         self.climbleft=self.load_climb("sprite/HatKid/new_sprite","left")
 
-
+        self.can_jump=True
+        self.jumps=0
+        self.can_jump = True
         self.direction="right"
         self.x_speed = 0
-
-
-
-
+        self.current_frame = self.idleright[0]
+        self.walk_index= 0
+        self.is_on_ground= True
+        self.has_jumped_in_air= False
         #self.standing= pygame.image.load("sprite/HatKid/standing.png")
         #self.prejump= pygame.image.load("sprite/HatKid/prejump.png")
         #self.fall= pygame.image.load("sprite/HatKid/fall.png")
@@ -66,7 +68,7 @@ class HatKid(GameSprite):
         #self.standing= pygame.transform.scale(self.standing,(52,52))
         #self.prejump= pygame.transform.scale(self.prejump,(52,52))
         #self.fall= pygame.transform.scale(self.fall,(52,52))
-        self.yspeed=0
+        self.y_speed=0
         self.jumps=0
         self.canjump= True
         self.walk_index=0
@@ -111,30 +113,121 @@ class HatKid(GameSprite):
         return tuple(climbs)    
     
     def make_gravity(self):
-        if self.yspeed <= 5:
-            self.yspeed +=0.2
+        if self.y_speed <= 5:
+            self.y_speed +=0.2
         else:
-            self.yspeed=5
+            self.y_speed=5
         #TODO: make proper collisions
-        if self.y >= 300:
-            self.yspeed=0
-            self.y=300
+        if self.rect.y >= 300:
+            self.y_speed=0
+            self.rect.y=300
             self.jumps=0
+            self.is_on_ground= True
+            self.has_jumped_in_air= False
 
     def animate(self):
-
+        self.jumps=0
         keyspressedlist=pygame.key.get_pressed()
 
         if keyspressedlist[pygame.K_d] and keyspressedlist[pygame.K_a]:
-            pass
+            self.stop_walk()
         elif keyspressedlist[pygame.K_d]:
             self.walk("right")
         elif keyspressedlist[pygame.K_a]:
             self.walk("left")
+        else:
+            self.stop_walk()
+        
+        # if keyspressedlist[pygame.K_SPACE]:
+        #     print ("space pressed")
+        #     if self.can_jump:
+        #         if self.is_on_ground:
+        #             self.jump()
+        #         elif self.has_jumped_in_air:
+        #             print("double jump")
+        #             self.can_jump=False
+        #             self.double_jump()
+        #         else:
+        #             self.can_jump=False
+        #             pass
+        # else:
+        #     print ("space let go")
+        #     self.can_jump= True
+
+
+        if keyspressedlist[pygame.K_w] or keyspressedlist[pygame.K_SPACE]:
+            print ("space pressed")
+            if self.is_on_ground== False:
+                self.jumps+=1
+
+
+            if self.jumps >=2 and self.canjump:
+                self.y_speed =-5
+                self.jumps+=1
+                self.canjump= False
+
+
+        else:
+            self.canjump=True
+
+    def get_walk_index(self):
+        if self.walk_index > 4-1/15:
+            self.walk_index = 0
+        else:
+            self.walk_index += 1/15
+        return int(self.walk_index)
+
     def walk(self,direction):
+        """set current frame"""
+        #walking right
+        direction_multiplyer=None
+        if self.direction=="right":
+            self.current_frame=self.walkright[self.get_walk_index()]
+            direction_multiplyer=1
+        elif self.direction=="left":
+            self.current_frame=self.walkleft[self.get_walk_index()]
+            direction_multiplyer=-1         
+        self.direction = direction
+
+        if abs(self.x_speed)<constants.MAXSPEED:
+            #accelerate
+            self.x_speed+=(constants.X_ACCELERATION*direction_multiplyer)
+        else:
+            #keep at max speed
+            self.x_speed= (constants.MAXSPEED*direction_multiplyer)
+
+
+
         print (direction)
 
-        
+    def stop_walk(self):
+        #FIX: when it changes direction it doesnt slow down if you press both keys first
+        if self.is_on_ground:
+            if abs(self.x_speed)> 0.1:
+                #decelerate
+                self.x_speed *= 0.9
+            else:
+                self.x_speed=0
+                if self.direction== "right":
+                    self.current_frame=self.idleright[0]
+                elif self.direction== "left":
+                    self.current_frame=self.idleleft[0]
+
+    def jump(self):
+        self.y_speed-= constants.MAXYSPEED
+        randomnumber=random.randint(0,13)
+        constants.JUMP_SFX[randomnumber].play()
+        self.is_on_ground= False
+        self.has_jumped_in_air= True
+    
+    def double_jump(self):
+        self.y_speed-= constants.MAXYSPEED
+        randomnumber=random.randint(0,1)
+        constants.DOUBLE_JUMP_SFX[randomnumber].play()
+        self.is_on_ground= False
+        self.has_jumped_in_air= False
+
+
     def update(self):
         #gravity
         self.make_gravity()
@@ -146,3 +239,10 @@ class HatKid(GameSprite):
         #sound effects
 
         #move and display
+        #if self.rect.y > 300:
+        #    self.rect.y=300
+            
+
+        self.rect.x+=self.x_speed
+        self.rect.y+=self.y_speed
+        self.screen.blit(self.current_frame,self.rect)
