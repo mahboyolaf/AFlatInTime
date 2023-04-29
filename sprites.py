@@ -5,26 +5,44 @@ import random
 
 
 class GameSprite:
-    def __init__(self,x,y,filename,screen):
+    def __init__(self,x,y,filename=None,screen=None):
         self.screen=screen
         self.x=x
         self.y=y
-        self.image= pygame.image.load(filename)
-        self.rect = self.image.get_rect()
+        if filename != None:
+            self.image= pygame.image.load(filename)
+            self.rect = self.image.get_rect()
 
 class Map(GameSprite):
-    def __init__(self,filename,screen):
-        super().__init__(0,0,filename,screen)
-        self.image= pygame.transform.scale(self.image,(480*2,320*2))
-        self.platform1= pygame.image.load("platform1.png")
-        
-    def update(self):
-        self.screen.fill(constants.BGCOLOUR)
-        self.screen.blit(self.image,(0,0))
-        self.drawplatform1(224,192)
+    def __init__(self,screen):
+        super().__init__(0,0,screen=screen)
+        self.blocks=[]
+        self.block_pos=[]
 
-        self.drawplatform1(576,256)
-        self.drawplatform1(384,256)
+        block_image=pygame.transform.scale(pygame.image.load("blocks/1.png"),(224,192))
+        self.blocks.append(block_image)
+        self.block_pos.append((0,constants.SCREEN_HEIGHT-block_image.get_height()))
+
+        block_image=pygame.transform.scale(pygame.image.load("blocks/2.png"),(125,32))
+        self.blocks.append(block_image)
+        self.block_pos.append((self.blocks[0].get_width()-block_image.get_width(),416))
+
+
+        #self.image= pygame.transform.scale(self.image,(480*2,320*2))
+        #self.platform1= pygame.image.load("platform1.png")
+        
+    def draw(self):
+        for i in range (len(self.blocks)):
+            self.screen.blit(self.blocks[i],self.block_pos[i])
+
+
+    # def update(self):
+    #     self.screen.fill(constants.BGCOLOUR)
+    #     self.screen.blit(self.image,(0,0))
+    #     self.drawplatform1(224,192)
+
+    #     self.drawplatform1(576,256)
+    #     self.drawplatform1(384,256)
         #224,192
         #576,256
         #384,256
@@ -69,7 +87,6 @@ class HatKid(GameSprite):
         #self.prejump= pygame.transform.scale(self.prejump,(52,52))
         #self.fall= pygame.transform.scale(self.fall,(52,52))
         self.y_speed=0
-        self.jumps=0
         self.canjump= True
         self.walk_index=0
     def load_walk(self,spritedir,direction):
@@ -126,7 +143,7 @@ class HatKid(GameSprite):
             self.has_jumped_in_air= False
 
     def animate(self):
-        self.jumps=0
+
         keyspressedlist=pygame.key.get_pressed()
 
         if keyspressedlist[pygame.K_d] and keyspressedlist[pygame.K_a]:
@@ -155,18 +172,38 @@ class HatKid(GameSprite):
         #     self.can_jump= True
 
 
+        # if keyspressedlist[pygame.K_w] or keyspressedlist[pygame.K_SPACE]:
+        #     print ("space pressed")
+        #     if self.is_on_ground== False:
+        #         self.jumps+=1
+
+
+        #     if self.jumps >=2 and self.canjump:
+        #         self.y_speed =-5
+        #         self.jumps+=1
+        #         self.canjump= False
+
+
+        # else:
+        #     self.canjump=True
+
+
+
+        #self.canjump= True
+
         if keyspressedlist[pygame.K_w] or keyspressedlist[pygame.K_SPACE]:
-            print ("space pressed")
-            if self.is_on_ground== False:
-                self.jumps+=1
-
-
-            if self.jumps >=2 and self.canjump:
+            if self.jumps <2 and self.canjump:
                 self.y_speed =-5
                 self.jumps+=1
                 self.canjump= False
-
-
+                if self.jumps==1:
+                    randomnumber=random.randint(0,13)
+                    constants.JUMP_SFX[randomnumber].play()
+                    print(randomnumber)
+                if self.jumps==2:
+                    randomnumber=random.randint(0,1)
+                    constants.DOUBLE_JUMP_SFX[randomnumber].play()
+                    print(randomnumber)
         else:
             self.canjump=True
 
