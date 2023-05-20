@@ -1,10 +1,10 @@
 import constants
 import pygame
 import random
+import os
 
 
-
-class GameSprite:
+class GameSprite(pygame.sprite.Sprite):
     def __init__(self,x,y,filename=None,screen=None):
         self.screen=screen
         self.x=x
@@ -13,27 +13,27 @@ class GameSprite:
             self.image= pygame.image.load(filename)
             self.rect = self.image.get_rect()
 
-class Map(GameSprite):
-    def __init__(self,screen):
-        super().__init__(0,0,screen=screen)
-        self.blocks=[]
-        self.block_pos=[]
+# class Map(GameSprite):
+#     def __init__(self,screen):
+#         super().__init__(0,0,screen=screen)
+#         self.blocks=[]
+#         self.block_pos=[]
 
-        block_image=pygame.transform.scale(pygame.image.load("blocks/1.png"),(224,192))
-        self.blocks.append(block_image)
-        self.block_pos.append((0,constants.SCREEN_HEIGHT-block_image.get_height()))
+#         block_image=pygame.transform.scale(pygame.image.load("blocks/1.png"),(224,192))
+#         self.blocks.append(block_image)
+#         self.block_pos.append((0,constants.SCREEN_HEIGHT-block_image.get_height()))
 
-        block_image=pygame.transform.scale(pygame.image.load("blocks/2.png"),(125,32))
-        self.blocks.append(block_image)
-        self.block_pos.append((self.blocks[0].get_width()-block_image.get_width(),416))
+#         block_image=pygame.transform.scale(pygame.image.load("blocks/2.png"),(125,32))
+#         self.blocks.append(block_image)
+#         self.block_pos.append((self.blocks[0].get_width()-block_image.get_width(),416))
 
 
-        #self.image= pygame.transform.scale(self.image,(480*2,320*2))
-        #self.platform1= pygame.image.load("platform1.png")
+#         #self.image= pygame.transform.scale(self.image,(480*2,320*2))
+#         #self.platform1= pygame.image.load("platform1.png")
         
-    def draw(self):
-        for i in range (len(self.blocks)):
-            self.screen.blit(self.blocks[i],self.block_pos[i])
+    # def draw(self):
+    #     for i in range (len(self.blocks)):
+    #         self.screen.blit(self.blocks[i],self.block_pos[i])
 
 
     # def update(self):
@@ -46,12 +46,12 @@ class Map(GameSprite):
         #224,192
         #576,256
         #384,256
-    def drawplatform1(self,x,y):
-        platform1_surface= pygame.Surface((96,32))
-        platform1_surface.fill(constants.BGCOLOUR)
-        platform1_surface.blit(self.platform1,(0,0))
-        self.screen.blit(platform1_surface,(x,y))
-        self.platform1=platform1_surface
+    # def drawplatform1(self,x,y):
+    #     platform1_surface= pygame.Surface((96,32))
+    #     platform1_surface.fill(constants.BGCOLOUR)
+    #     platform1_surface.blit(self.platform1,(0,0))
+    #     self.screen.blit(platform1_surface,(x,y))
+    #     self.platform1=platform1_surface
 
 
 
@@ -149,8 +149,12 @@ class HatKid(GameSprite):
         if keyspressedlist[pygame.K_d] and keyspressedlist[pygame.K_a]:
             self.stop_walk()
         elif keyspressedlist[pygame.K_d]:
+            if self.direction == "left":
+                self.stop_walk()
             self.walk("right")
         elif keyspressedlist[pygame.K_a]:
+            if self.direction == "right":
+                self.stop_walk()
             self.walk("left")
         else:
             self.stop_walk()
@@ -223,7 +227,7 @@ class HatKid(GameSprite):
             direction_multiplyer=1
         elif self.direction=="left":
             self.current_frame=self.walkleft[self.get_walk_index()]
-            direction_multiplyer=-1         
+            direction_multiplyer=-1
         self.direction = direction
 
         if abs(self.x_speed)<constants.MAXSPEED:
@@ -278,8 +282,50 @@ class HatKid(GameSprite):
         #move and display
         #if self.rect.y > 300:
         #    self.rect.y=300
-            
-
         self.rect.x+=self.x_speed
         self.rect.y+=self.y_speed
-        self.screen.blit(self.current_frame,self.rect)
+        self.screen.blit(self.current_frame,self.rect)            
+class Map(GameSprite):
+    def __init__(self,tilesetdir,screen):
+        self.tiles=[]
+        self.importtileset(tilesetdir)
+        self.tileindexs=[]
+        self.screen=screen
+    def importtileset(self,tilesetdir):
+        self.tiles=[]
+        for file in os.listdir(tilesetdir):
+            tile=pygame.image.load(tilesetdir+file)
+            tile=pygame.transform.scale(tile,(constants.TILE_SIZE,constants.TILE_SIZE))
+            self.tiles.append(tile)  
+
+    def createfromtmx(self,mapfile):
+        with open(mapfile) as map:
+            line=map.readline()
+            while line !="":
+                line=map.readline()
+                if line.strip()=='<data encoding="csv">':
+                    while line.strip().find("</data>") <0:
+                        line=map.readline().strip()
+                        if line[-1]== ",":
+                            line=line [0:-1]
+                        self.tileindexs.append(line.split(","))    
+        self.tileindexs.pop()
+        #convert to int
+        for row_counter in range (len(self.tileindexs)):
+            for column_counter in range (len(self.tileindexs[0])):
+                self.tileindexs[row_counter][column_counter]=int(self.tileindexs[row_counter][column_counter])
+ 
+
+    def draw(self):
+        self.screen.fill(("#888888"))
+        row_counter=0
+        column_counter=0
+        for counter in range (constants.WIDTHINTILES*constants.HEIGHTINTILES+1):
+            if self.tileindexs[row_counter][column_counter] != 0:
+                self.screen.blit((self.tiles[self.tileindexs[row_counter][column_counter]-1]),(column_counter*constants.TILE_SIZE,row_counter*constants.TILE_SIZE))
+            if column_counter < 24:
+                column_counter+=1
+            if counter%constants.WIDTHINTILES == 0 and counter < constants.WIDTHINTILES*constants.HEIGHTINTILES+1 and row_counter < 13:
+                    row_counter+=1
+                    column_counter=0
+

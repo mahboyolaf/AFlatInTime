@@ -1,13 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <map version="1.10" tiledversion="1.10.0" orientation="orthogonal" renderorder="right-down" width="25" height="14" tilewidth="16" tileheight="16" infinite="0" nextlayerid="2" nextobjectid="1">
  <tileset firstgid="1" name="Grass16" tilewidth="16" tileheight="16" tilecount="64" columns="8">
-  <image source="../../AFlatInTime/Grass16.png" width="128" height="128"/>
+  <image source="../Grass16.png" width="128" height="128"/>
  </tileset>
+ <tileset firstgid="65" source="Brick16.tsx"/>
  <layer id="1" name="Tile Layer 1" width="25" height="14">
   <data encoding="csv">
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,65,65,65,65,65,65,65,65,65,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,66,66,66,66,66,66,66,66,66,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,

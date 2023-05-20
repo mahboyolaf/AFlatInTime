@@ -1,0 +1,51 @@
+{
+    "Map/SizeTest": {
+        "height": 4300,
+        "width": 2
+    },
+    "activeFile": "tilesheet16.tsx",
+    "expandedProjectPaths": [
+        "."
+    ],
+    "file.lastUsedOpenFilter": "All Files (*)",
+    "fileStates": {
+        "Brick16.tsx": {
+            "scaleInDock": 1
+        },
+        "testing2.tmx": {
+            "scale": 2.5785714285714287,
+            "selectedLayer": 0,
+            "viewCenter": {
+                "x": 198.55955678670358,
+                "y": 110.52631578947367
+            }
+        },
+        "testing2.tmx#Grass16": {
+            "scaleInDock": 1
+        },
+        "tilesheet16.tsx": {
+            "scaleInDock": 1,
+            "scaleInEditor": 1
+        }
+    },
+    "last.imagePath": "C:/Users/mahbo/Random/AFlatInTime",
+    "map.height": 14,
+    "map.lastUsedFormat": "tmx",
+    "map.tileHeight": 16,
+    "map.tileWidth": 16,
+    "map.width": 25,
+    "openFiles": [
+        "tilesheet16.tsx"
+    ],
+    "project": "Map2.tiled-project",
+    "recentFiles": [
+        "testing2.tmx",
+        "tilesheet16.tsx"
+    ],
+    "tileset.lastUsedFormat": "tsx",
+    "tileset.tileSize": {
+        "height": 16,
+        "width": 16
+    },
+    "tileset.type": 0
+}
