@@ -16,11 +16,15 @@ clock = pygame.time.Clock()
 #set up screen
 screen=pygame.display.set_mode((constants.SCREEN_WIDTH,constants.SCREEN_HEIGHT))
 
-hatkid=sprites.HatKid("sprite/HatKid/walk1.png",screen)
-#map1= sprites.Map("map64.png",screen)
+# map
 tilesetdir="maps/tilesets/tilesheet/"
-map1=sprites.Map(tilesetdir,screen)
-map1.createfromtmx("maps/map2.tmx")
+mapfile= "maps/map2.tmx"
+map1=sprites.LevelMap(tilesetdir, mapfile, screen)
+
+
+# player
+
+hatkid=sprites.HatKid(200,200,screen)
 #set up game loop
 game=True
 while game:

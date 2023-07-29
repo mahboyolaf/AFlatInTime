@@ -10,8 +10,23 @@ class GameSprite(pygame.sprite.Sprite):
         self.x=x
         self.y=y
         if filename != None:
-            self.image= pygame.image.load(filename)
-            self.rect = self.image.get_rect()
+            self.set_image(filename)
+            
+        
+    def set_image(self, filename):
+        self.image= pygame.image.load(filename)
+        self.rect = self.image.get_rect()
+        self.rect.center = [self.x, self.y]
+
+    def update(self):
+        pass
+
+    def draw(self):
+        if self.image == None or self.rect==None:
+            raise Exception("Sprite image is not properly defined")
+
+        self.screen.blit(self.image, self.rect)
+
 
 # class Map(GameSprite):
 #     def __init__(self,screen):
@@ -56,9 +71,9 @@ class GameSprite(pygame.sprite.Sprite):
 
 
 class HatKid(GameSprite):
-    def __init__(self,filename,screen):
-
-        super().__init__(0,0,filename,screen)
+    def __init__(self,x,y,screen):
+        hatkid_filename = "sprite/HatKid/walk1.png"
+        super().__init__(x,y,hatkid_filename,screen)
         self.walks=[]
         
         self.walkright=self.load_walk("sprite/HatKid/new_sprite","right")
@@ -285,20 +300,37 @@ class HatKid(GameSprite):
         self.rect.x+=self.x_speed
         self.rect.y+=self.y_speed
         self.screen.blit(self.current_frame,self.rect)            
-class Map(GameSprite):
-    def __init__(self,tilesetdir,screen):
+
+
+class LevelMap():
+    class Tile(GameSprite):
+        def __init__(self, x, y, filename=None, screen=None):
+            super().__init__(x, y, filename, screen)
+            tile=pygame.image.load(filename)
+            tile=pygame.transform.scale(tile,(constants.TILE_SIZE,constants.TILE_SIZE))
+            
+    def __init__(self,tilesetdir,mapfile,screen):
         self.tiles=[]
-        self.importtileset(tilesetdir)
         self.tileindexs=[]
         self.screen=screen
+        self.mapfile = mapfile
+
+        self.importtileset(tilesetdir)
+        self.createfromtmx(mapfile)
+        
     def importtileset(self,tilesetdir):
-        self.tiles=[]
+        """Import the set of tiles useable in the map"""
+
         for file in os.listdir(tilesetdir):
-            tile=pygame.image.load(tilesetdir+file)
-            tile=pygame.transform.scale(tile,(constants.TILE_SIZE,constants.TILE_SIZE))
+            # tile=pygame.image.load(tilesetdir+file)
+            # tile=pygame.transform.scale(tile,(constants.TILE_SIZE,constants.TILE_SIZE))
+            tile = LevelMap.Tile(0,0,tilesetdir+file,self.screen)
             self.tiles.append(tile)  
 
     def createfromtmx(self,mapfile):
+        """Read in the tile indices information"""
+        
+        # read tile index info from map file
         with open(mapfile) as map:
             line=map.readline()
             while line !="":
@@ -310,7 +342,8 @@ class Map(GameSprite):
                             line=line [0:-1]
                         self.tileindexs.append(line.split(","))    
         self.tileindexs.pop()
-        #convert to int
+        
+        #convert tile indices to int
         for row_counter in range (len(self.tileindexs)):
             for column_counter in range (len(self.tileindexs[0])):
                 self.tileindexs[row_counter][column_counter]=int(self.tileindexs[row_counter][column_counter])
