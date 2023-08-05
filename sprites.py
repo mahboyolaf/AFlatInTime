@@ -28,48 +28,6 @@ class GameSprite(pygame.sprite.Sprite):
         self.screen.blit(self.image, self.rect)
 
 
-# class Map(GameSprite):
-#     def __init__(self,screen):
-#         super().__init__(0,0,screen=screen)
-#         self.blocks=[]
-#         self.block_pos=[]
-
-#         block_image=pygame.transform.scale(pygame.image.load("blocks/1.png"),(224,192))
-#         self.blocks.append(block_image)
-#         self.block_pos.append((0,constants.SCREEN_HEIGHT-block_image.get_height()))
-
-#         block_image=pygame.transform.scale(pygame.image.load("blocks/2.png"),(125,32))
-#         self.blocks.append(block_image)
-#         self.block_pos.append((self.blocks[0].get_width()-block_image.get_width(),416))
-
-
-#         #self.image= pygame.transform.scale(self.image,(480*2,320*2))
-#         #self.platform1= pygame.image.load("platform1.png")
-        
-    # def draw(self):
-    #     for i in range (len(self.blocks)):
-    #         self.screen.blit(self.blocks[i],self.block_pos[i])
-
-
-    # def update(self):
-    #     self.screen.fill(constants.BGCOLOUR)
-    #     self.screen.blit(self.image,(0,0))
-    #     self.drawplatform1(224,192)
-
-    #     self.drawplatform1(576,256)
-    #     self.drawplatform1(384,256)
-        #224,192
-        #576,256
-        #384,256
-    # def drawplatform1(self,x,y):
-    #     platform1_surface= pygame.Surface((96,32))
-    #     platform1_surface.fill(constants.BGCOLOUR)
-    #     platform1_surface.blit(self.platform1,(0,0))
-    #     self.screen.blit(platform1_surface,(x,y))
-    #     self.platform1=platform1_surface
-
-
-
 class HatKid(GameSprite):
     def __init__(self,x,y,screen):
         hatkid_filename = "sprite/HatKid/walk1.png"
@@ -308,16 +266,35 @@ class LevelMap():
             super().__init__(x, y, filename, screen)
             tile=pygame.image.load(filename)
             tile=pygame.transform.scale(tile,(constants.TILE_SIZE,constants.TILE_SIZE))
-            
+            # TODO load 2 self.image
+
     def __init__(self,tilesetdir,mapfile,screen):
         self.tiles=[]
         self.tileindexs=[]
         self.screen=screen
         self.mapfile = mapfile
+        self.tilesprites=[]
+
 
         self.importtileset(tilesetdir)
         self.createfromtmx(mapfile)
-        
+        self.loadtilesprites()
+
+    def loadtilesprites(self):
+        row_counter=0
+        column_counter=0
+        for counter in range (constants.WIDTHINTILES*constants.HEIGHTINTILES+1):
+            if self.tileindexs[row_counter][column_counter] != 0:
+                #self.screen.blit((self.tiles[self.tileindexs[row_counter][column_counter]-1]),(column_counter*constants.TILE_SIZE,row_counter*constants.TILE_SIZE))
+                currenttile = (self.tiles[self.tileindexs[row_counter][column_counter]-1])
+                currenttile.x= column_counter*constants.TILE_SIZE
+                currenttile.y= row_counter*constants.TILE_SIZE
+                if column_counter < 24:
+                    column_counter+=1
+                    if counter%constants.WIDTHINTILES == 0 and counter < constants.WIDTHINTILES*constants.HEIGHTINTILES+1 and row_counter < 13:
+                        row_counter+=1
+                        column_counter=0
+
     def importtileset(self,tilesetdir):
         """Import the set of tiles useable in the map"""
 
@@ -355,7 +332,9 @@ class LevelMap():
         column_counter=0
         for counter in range (constants.WIDTHINTILES*constants.HEIGHTINTILES+1):
             if self.tileindexs[row_counter][column_counter] != 0:
-                self.screen.blit((self.tiles[self.tileindexs[row_counter][column_counter]-1]),(column_counter*constants.TILE_SIZE,row_counter*constants.TILE_SIZE))
+                currenttile=(self.tiles[self.tileindexs[row_counter][column_counter]-1])
+                self.screen.blit(currenttile.image,currenttile.rect)
+                #self.screen.blit((self.tiles[self.tileindexs[row_counter][column_counter]-1]),(column_counter*constants.TILE_SIZE,row_counter*constants.TILE_SIZE))
             if column_counter < 24:
                 column_counter+=1
             if counter%constants.WIDTHINTILES == 0 and counter < constants.WIDTHINTILES*constants.HEIGHTINTILES+1 and row_counter < 13:
