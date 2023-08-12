@@ -2,13 +2,15 @@ import constants
 import pygame
 import random
 import os
-
+import copy
 
 class GameSprite(pygame.sprite.Sprite):
     def __init__(self,x,y,filename=None,screen=None):
+        pygame.sprite.Sprite.__init__(self)
         self.screen=screen
         self.x=x
         self.y=y
+        pygame.sprite.Sprite.__init__(self)
         if filename != None:
             self.set_image(filename)
             
@@ -274,9 +276,11 @@ class LevelMap():
     def __init__(self,tilesetdir,mapfile,screen):
         self.tiles=[]
         self.tileindexs=[]
+        #tileindex is location of tiles on screen (in tiles)
+        #tileindex[0][0] is the first tile in the first row and coloumn
         self.screen=screen
         self.mapfile = mapfile
-        self.tilesprites=[]
+        self.tileset=[]
 
         self.createfromtmx(mapfile)
         self.importtileset(tilesetdir)
@@ -284,28 +288,35 @@ class LevelMap():
 
 
     def loadtilesprites(self):
-        row_counter=0
         column_counter=0
-        print(len(self.tileindexs),len(self.tileindexs[0]))
-        for counter in range (constants.WIDTHINTILES*constants.HEIGHTINTILES+1):
+        row_counter=0
+        print(len(self.tileindexs),len(self.tileindexs[0]),len(self.tiles))
+        for counter in range (constants.WIDTHINTILES*constants.HEIGHTINTILES):
+            print(self.tileindexs[row_counter][column_counter],counter)
             if self.tileindexs[row_counter][column_counter] != 0:
-
-                (self.tiles[self.tileindexs[row_counter][column_counter]-1]).rect.x= column_counter*constants.TILE_SIZE
-                (self.tiles[self.tileindexs[row_counter][column_counter]-1]).rect.y= row_counter*constants.TILE_SIZE
+                indexintileset=self.tileindexs[row_counter][column_counter]-1
+                print (column_counter)
+                print (row_counter)
+                print (indexintileset)
+                tile=copy.deepcopy(self.tileset[indexintileset])
+                print (tile.__repr__())
+                tile.rect.x= column_counter*constants.TILE_SIZE
+                tile.rect.y= row_counter*constants.TILE_SIZE
+                self.tiles.append(tile)
                 print (row_counter,column_counter,column_counter*constants.TILE_SIZE,row_counter*constants.TILE_SIZE)
             if column_counter < constants.WIDTHINTILES-1:#24:
                 column_counter+=1
-            if counter%constants.WIDTHINTILES == 0 and counter < constants.WIDTHINTILES*constants.HEIGHTINTILES+1 and row_counter < constants.HEIGHTINTILES-1:
+            #elif counter%constants.WIDTHINTILES == 0 and counter < constants.WIDTHINTILES*constants.HEIGHTINTILES+1 and row_counter < constants.HEIGHTINTILES-1:
+            else:
                 row_counter+=1
                 column_counter=0
-
 
     def importtileset(self,tilesetdir):
         """Import the set of tiles useable in the map"""
 
         for file in os.listdir(tilesetdir):
             tile = LevelMap.Tile(0,0,tilesetdir+file,self.screen)
-            self.tiles.append(tile)  
+            self.tileset.append(tile)  
 
 
     def createfromtmx(self,mapfile):
@@ -321,7 +332,8 @@ class LevelMap():
                         line=map.readline().strip()
                         if line[-1]== ",":
                             line=line [0:-1]
-                        self.tileindexs.append(line.split(","))    
+                        self.tileindexs.append(line.split(","))   
+         
     
 
         self.tileindexs.pop()
@@ -330,7 +342,7 @@ class LevelMap():
         for row_counter in range (len(self.tileindexs)):
             for column_counter in range (len(self.tileindexs[0])):
                 self.tileindexs[row_counter][column_counter]=int(self.tileindexs[row_counter][column_counter])
-        print(self.tileindexs)
+        print("tile index",self.tileindexs)
 
 
     # def draw(self):
