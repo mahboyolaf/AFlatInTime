@@ -270,21 +270,54 @@ class LevelMap():
             self.image= pygame.image.load(filename)
             self.image=pygame.transform.scale(self.image,(constants.TILE_SIZE,constants.TILE_SIZE))
             self.rect = self.image.get_rect()
-            self.rect.center = [self.x, self.y]
+            self.rect.topleft = [self.x, self.y]
 
 
     def __init__(self,tilesetdir,mapfile,screen):
-        self.tiles=[]
+        self.tiles=pygame.sprite.Group()
         self.tileindexs=[]
         #tileindex is location of tiles on screen (in tiles)
         #tileindex[0][0] is the first tile in the first row and coloumn
         self.screen=screen
         self.mapfile = mapfile
         self.tileset=[]
+        self.tilesetdir=tilesetdir
+        #self.createfromtmx(mapfile)
+        #self.importtileset(tilesetdir)
+        #self.loadtilesprites()
+        self.createtiles()
 
-        self.createfromtmx(mapfile)
-        self.importtileset(tilesetdir)
-        self.loadtilesprites()
+
+    def createtiles(self):
+        with open(self.mapfile) as maptmx:
+            columnindex=-1
+            rowindex=-1
+            line=None
+            #TODO fix empty line in middle
+            while line !="":
+                line=maptmx.readline()
+                line=line.strip()
+                if line.find("<") == -1:
+                    rowindex+=1
+                    columnindex=-1
+                    for tileindex in line.split(sep=","):
+                        if tileindex.strip().isnumeric():
+                            columnindex+=1
+                            #TODO load the file with name
+                            #create tile object
+                            tileindex=int(tileindex)
+                            if tileindex!=0:
+                                filename = self.tilesetdir+r"%03d.png"%(tileindex)
+                                x=columnindex*constants.TILE_SIZE
+                                y=rowindex*constants.TILE_SIZE
+                                tile= LevelMap.Tile(x,y,filename,self.screen)
+                                self.tiles.add(tile)
+
+                        
+
+                        
+
+                
 
 
     def loadtilesprites(self):
@@ -362,6 +395,4 @@ class LevelMap():
     
     def draw(self):
         self.screen.fill(("#888888"))
-        for tile in self.tiles:
-            self.screen.blit(tile.image,tile.rect)
-
+        self.tiles.draw(self.screen)
