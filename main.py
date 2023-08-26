@@ -34,7 +34,7 @@ while game:
     hatkid.update()      
     clock.tick(constants.FPS)
     pygame.display.update()
-     
+    hitlist=pygame.sprite.spritecollide(hatkid,map1.tiles,True)
     for event in (pygame.event.get()):
         if (pygame.KEYDOWN == event.type and event.key == pygame.K_ESCAPE) or event.type == pygame.QUIT:
                 game=False
