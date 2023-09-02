@@ -5,17 +5,21 @@ import os
 import copy
 
 class GameSprite(pygame.sprite.Sprite):
-    def __init__(self,x,y,filename=None,screen=None):
+    def __init__(self,x,y,filename=None,screen=None,size=None):
+
         pygame.sprite.Sprite.__init__(self)
         self.screen=screen
         self.x=x
         self.y=y
-        pygame.sprite.Sprite.__init__(self)
+        self.size=size
+
         if filename != None:
             self.set_image(filename)
             
     def set_image(self, filename):
             self.image= pygame.image.load(filename)
+            if self.size != None:
+                self.image=pygame.transform.scale(self.image,self.size)
             self.rect = self.image.get_rect()
             self.rect.center = [self.x, self.y]
 
@@ -32,7 +36,8 @@ class GameSprite(pygame.sprite.Sprite):
 class HatKid(GameSprite):
     def __init__(self,x,y,screen):
         hatkid_filename = "sprite/HatKid/walk1.png"
-        super().__init__(x,y,hatkid_filename,screen)
+        size = (constants.TILE_SIZE,constants.TILE_SIZE)
+        super().__init__(x,y,hatkid_filename,screen,size)
 
         self.walks=[]
         
