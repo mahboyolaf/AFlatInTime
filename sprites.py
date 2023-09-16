@@ -249,10 +249,15 @@ class HatKid(GameSprite):
         self.has_jumped_in_air= False
 
 
-    def update(self):
+    def update(self,map1):
         #gravity
         self.make_gravity()
+        #checks if theres a tile
+        if self.tilesunder(map1):
+            print("tile under")
+            self.y_speed=0
 
+            #self.tilesunder(map1)
         #walking sprite
         
         #set up display frame
@@ -264,9 +269,19 @@ class HatKid(GameSprite):
         #    self.rect.y=300
         self.rect.x+=self.x_speed
         self.rect.y+=self.y_speed
+
+
+
+    def tilesunder(self,map):
+        """return a list of tiles below the kid"""
+        self.rect.move_ip([0,2])
+        hitlist=pygame.sprite.spritecollide(self,map.tiles,False)
+        self.rect.move_ip([0,-2])
+        return hitlist
+    
+    def draw(self):
         pygame.draw.rect(self.screen,"0xffffff",(self.rect.topleft[0],self.rect.topleft[1],constants.HATKIDSIZEIDLE[0],constants.HATKIDSIZEIDLE[1]))
-        self.screen.blit(self.current_frame,self.rect)            
-        
+        self.screen.blit(self.current_frame,self.rect)
 
 class LevelMap():
     class Tile(GameSprite):

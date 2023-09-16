@@ -31,10 +31,11 @@ while game:
     screen.fill(constants.BGCOLOUR)
     
     map1.draw()
-    hatkid.update()      
+    hatkid.update(map1)
+    hatkid.draw()      
     clock.tick(constants.FPS)
     pygame.display.update()
-    hitlist=pygame.sprite.spritecollide(hatkid,map1.tiles,True)
+    #hitlist=pygame.sprite.spritecollide(hatkid,map1.tiles,False)
     for event in (pygame.event.get()):
         if (pygame.KEYDOWN == event.type and event.key == pygame.K_ESCAPE) or event.type == pygame.QUIT:
-                game=False
+                game=False 
