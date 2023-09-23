@@ -109,18 +109,18 @@ class HatKid(GameSprite):
             climbs.append(climb)
         return tuple(climbs)    
     
-    def make_gravity(self):
-        if self.y_speed <= 5:
-            self.y_speed +=0.2
-        else:
-            self.y_speed=5
-        #TODO: make proper collisions
-        if self.rect.y >= 300:
-            self.y_speed=0
-            self.rect.y=300
-            self.jumps=0
-            self.is_on_ground= True
-            self.has_jumped_in_air= False
+    # def make_gravity(self):
+    #     if self.y_speed <= constants.MAXYSPEED:
+    #         self.y_speed +=0.2
+    #     else:
+    #         self.y_speed=constants.MAXYSPEED
+
+        # if self.rect.y >= 300:
+        #     self.y_speed=0
+        #     self.rect.y=300
+        #     self.jumps=0
+        #     self.is_on_ground= True
+        #     self.has_jumped_in_air= False
 
     def animate(self):
 
@@ -251,13 +251,27 @@ class HatKid(GameSprite):
 
     def update(self,map1):
         #gravity
-        self.make_gravity()
+        #self.make_gravity()
+
+        if self.y_speed <= constants.MAXYSPEED:
+            self.y_speed +=0.2
         #checks if theres a tile
         if self.tilesunder(map1):
             print("tile under")
             self.y_speed=0
+            self.jumps=0
+            self.is_on_ground= True
+            self.has_jumped_in_air= False
 
-            #self.tilesunder(map1)
+        if self.tilesabove(map1):
+            self.y_speed-=0.5
+
+        if self.tilesleft(map1) and pygame.key.get_pressed()[pygame.K_d]:
+            #self.stop_walk()
+            self.x_speed=0
+        if self.tilesright(map1)and pygame.key.get_pressed()[pygame.K_a]:
+            #self.stop_walk()
+            self.x_speed=0
         #walking sprite
         
         #set up display frame
@@ -274,11 +288,28 @@ class HatKid(GameSprite):
 
     def tilesunder(self,map):
         """return a list of tiles below the kid"""
-        self.rect.move_ip([0,2])
+        self.rect.move_ip([0,5])
         hitlist=pygame.sprite.spritecollide(self,map.tiles,False)
-        self.rect.move_ip([0,-2])
+        self.rect.move_ip([0,-5])
         return hitlist
-    
+    def tilesabove(self,map):
+        """return a list of tiles above the kid"""
+        self.rect.move_ip([0,-5])
+        hitlist=pygame.sprite.spritecollide(self,map.tiles,False)
+        self.rect.move_ip([0,5])
+        return hitlist    
+    def tilesleft(self,map):
+        """return a list of tiles above the kid"""
+        self.rect.move_ip([-1,0])
+        hitlist=pygame.sprite.spritecollide(self,map.tiles,False)
+        self.rect.move_ip([1,0])
+        return hitlist 
+    def tilesright(self,map):
+        self.rect.move_ip([1,0])
+        hitlist=pygame.sprite.spritecollide(self,map.tiles,False)
+        self.rect.move_ip([-1,0])
+        return hitlist    
+
     def draw(self):
         pygame.draw.rect(self.screen,"0xffffff",(self.rect.topleft[0],self.rect.topleft[1],constants.HATKIDSIZEIDLE[0],constants.HATKIDSIZEIDLE[1]))
         self.screen.blit(self.current_frame,self.rect)
