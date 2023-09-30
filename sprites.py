@@ -1,9 +1,9 @@
-import constants
+
 import pygame
 import random
 import os
 import copy
-
+from constants import *
 class GameSprite(pygame.sprite.Sprite):
     def __init__(self,x,y,filename=None,screen=None,size=None):
 
@@ -36,7 +36,7 @@ class GameSprite(pygame.sprite.Sprite):
 class HatKid(GameSprite):
     def __init__(self,x,y,screen):
         hatkid_filename = "sprite/HatKid/walk1.png"
-        size = (constants.TILE_SIZE,constants.TILE_SIZE)
+        size = (TILE_SIZE,TILE_SIZE)
         super().__init__(x,y,hatkid_filename,screen,size)
 
         self.walks=[]
@@ -73,7 +73,7 @@ class HatKid(GameSprite):
         walks=[]
         for counter in range (1,5):
             walk= pygame.image.load(spritedir+"/walk"+str(counter)+".png")
-            walk=pygame.transform.scale(walk,constants.HATKIDSIZEWALK)
+            walk=pygame.transform.scale(walk,HATKIDSIZEWALK)
             if direction=="left":
                 walk=pygame.transform.flip(walk,True,False)
             walks.append(walk)
@@ -83,7 +83,7 @@ class HatKid(GameSprite):
         idles=[]
         for counter in range (1,4):
             idle= pygame.image.load(spritedir+"/idle"+str(counter)+".png")
-            idle=pygame.transform.scale(idle,constants.HATKIDSIZEIDLE)
+            idle=pygame.transform.scale(idle,HATKIDSIZEIDLE)
             if direction=="left":
                 idle=pygame.transform.flip(idle,True,False)
             idles.append(idle)
@@ -93,7 +93,7 @@ class HatKid(GameSprite):
         dives=[]
         for counter in range (1,3):
             dive= pygame.image.load(spritedir+"/dive"+str(counter)+".png")
-            dive=pygame.transform.scale(dive,constants.HATKIDSIZEDIVE)
+            dive=pygame.transform.scale(dive,HATKIDSIZEDIVE)
             if direction=="left":
                 dive=pygame.transform.flip(dive,True,False)
             dives.append(dive)
@@ -103,17 +103,17 @@ class HatKid(GameSprite):
         climbs=[]
         for counter in range (1,2):
             climb= pygame.image.load(spritedir+"/climb"+str(counter)+".png")
-            climb=pygame.transform.scale(climb,constants.HATKIDSIZECLIMB)
+            climb=pygame.transform.scale(climb,HATKIDSIZECLIMB)
             if direction=="left":
                 climb=pygame.transform.flip(climb,True,False)
             climbs.append(climb)
         return tuple(climbs)    
     
     # def make_gravity(self):
-    #     if self.y_speed <= constants.MAXYSPEED:
+    #     if self.y_speed <= MAXYSPEED:
     #         self.y_speed +=0.2
     #     else:
-    #         self.y_speed=constants.MAXYSPEED
+    #         self.y_speed=MAXYSPEED
 
         # if self.rect.y >= 300:
         #     self.y_speed=0
@@ -182,11 +182,11 @@ class HatKid(GameSprite):
                 self.canjump= False
                 if self.jumps==1:
                     randomnumber=random.randint(0,13)
-                    constants.JUMP_SFX[randomnumber].play()
+                    JUMP_SFX[randomnumber].play()
                     print(randomnumber)
                 if self.jumps==2:
                     randomnumber=random.randint(0,1)
-                    constants.DOUBLE_JUMP_SFX[randomnumber].play()
+                    DOUBLE_JUMP_SFX[randomnumber].play()
                     print(randomnumber)
         else:
             self.canjump=True
@@ -210,12 +210,12 @@ class HatKid(GameSprite):
             direction_multiplyer=-1
         self.direction = direction
 
-        if abs(self.x_speed)<constants.MAXSPEED:
+        if abs(self.x_speed)<MAXSPEED:
             #accelerate
-            self.x_speed+=(constants.X_ACCELERATION*direction_multiplyer)
+            self.x_speed+=(X_ACCELERATION*direction_multiplyer)
         else:
             #keep at max speed
-            self.x_speed= (constants.MAXSPEED*direction_multiplyer)
+            self.x_speed= (MAXSPEED*direction_multiplyer)
 
 
 
@@ -235,16 +235,16 @@ class HatKid(GameSprite):
                     self.current_frame=self.idleleft[0]
 
     def jump(self):
-        self.y_speed-= constants.MAXYSPEED
+        self.y_speed-= MAXYSPEED
         randomnumber=random.randint(0,13)
-        constants.JUMP_SFX[randomnumber].play()
+        JUMP_SFX[randomnumber].play()
         self.is_on_ground= False
         self.has_jumped_in_air= True
     
     def double_jump(self):
-        self.y_speed-= constants.MAXYSPEED
+        self.y_speed-= MAXYSPEED
         randomnumber=random.randint(0,1)
-        constants.DOUBLE_JUMP_SFX[randomnumber].play()
+        DOUBLE_JUMP_SFX[randomnumber].play()
         self.is_on_ground= False
         self.has_jumped_in_air= False
 
@@ -253,7 +253,7 @@ class HatKid(GameSprite):
         #gravity
         #self.make_gravity()
 
-        if self.y_speed <= constants.MAXYSPEED:
+        if self.y_speed <= MAXYSPEED:
             self.y_speed +=0.2
         #checks if theres a tile
         if self.tilesunder(map1):
@@ -276,6 +276,13 @@ class HatKid(GameSprite):
         
         #set up display frame
         self.animate()
+        if(self.ispastleft()):
+            self.rect.x=1
+        if(self.ispastright()):
+            self.rect.x=WIDTHINTILES*TILE_SIZE-(TILE_SIZE+1)
+        if(self.ispastbottom()):
+            self.rect.x,self.rect.y=100,100
+
         #sound effects
 
         #move and display
@@ -308,10 +315,29 @@ class HatKid(GameSprite):
         self.rect.move_ip([1,0])
         hitlist=pygame.sprite.spritecollide(self,map.tiles,False)
         self.rect.move_ip([-1,0])
-        return hitlist    
+        return hitlist   
+
+        # if self.rect.x >= 0:
+        #     self.rect.x=0
+        # if self.rect.x <= WIDTHINTILES*TILE_SIZE+TILE_SIZE:
+        #     self.rect.x=WIDTHINTILES*TILE_SIZE+TILE_SIZE
+        # if self.rect.y>=HEIGHTINTILES*TILE_SIZE+TILE_SIZE:
+        #     self.rect.y=HEIGHTINTILES*TILE_SIZE+TILE_SIZE
+
+    def ispastleft(self):
+        """true or false if touching barrier on left"""
+        return self.rect.x <= 0
+
+    def ispastright(self):
+        """true or false if touching barrier on right"""
+        return self.rect.x+TILE_SIZE >= WIDTHINTILES*TILE_SIZE
+
+    def ispastbottom(self):
+        """true or false if touching barrier on bottom"""
+        return self.rect.y+TILE_SIZE >= HEIGHTINTILES*TILE_SIZE
 
     def draw(self):
-        pygame.draw.rect(self.screen,"0xffffff",(self.rect.topleft[0],self.rect.topleft[1],constants.HATKIDSIZEIDLE[0],constants.HATKIDSIZEIDLE[1]))
+        pygame.draw.rect(self.screen,"0xffffff",(self.rect.topleft[0],self.rect.topleft[1],HATKIDSIZEIDLE[0],HATKIDSIZEIDLE[1]))
         self.screen.blit(self.current_frame,self.rect)
 
 class LevelMap():
@@ -321,7 +347,7 @@ class LevelMap():
     
         def set_image(self, filename):
             self.image= pygame.image.load(filename)
-            self.image=pygame.transform.scale(self.image,(constants.TILE_SIZE,constants.TILE_SIZE))
+            self.image=pygame.transform.scale(self.image,(TILE_SIZE,TILE_SIZE))
             self.rect = self.image.get_rect()
             self.rect.topleft = [self.x, self.y]
 
@@ -357,8 +383,8 @@ class LevelMap():
                             tileindex=int(tileindex)
                             if tileindex!=0:
                                 filename = self.tilesetdir+r"%03d.png"%(tileindex)
-                                x=columnindex*constants.TILE_SIZE
-                                y=rowindex*constants.TILE_SIZE
+                                x=columnindex*TILE_SIZE
+                                y=rowindex*TILE_SIZE
                                 tile= LevelMap.Tile(x,y,filename,self.screen)
                                 self.tiles.add(tile)
 
