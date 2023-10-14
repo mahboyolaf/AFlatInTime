@@ -24,7 +24,7 @@ map1=sprites.LevelMap(mapfile=mapfiletmx, tilesetdir=tilesetdir, screen=screen)
 
 # player
 
-hatkid=sprites.HatKid(100,100,screen)
+hatkid=sprites.HatKid(constants.SCREEN_WIDTH-100,100,screen)
 #set up game loop
 game=True
 while game:

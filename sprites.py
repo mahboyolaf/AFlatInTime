@@ -292,10 +292,22 @@ class HatKid(GameSprite):
         
         #set up display frame
         self.animate()
+
         if(self.ispastleft()):
-            self.rect.x=1
+            if not pygame.key.get_pressed()[pygame.K_a]:
+                self.rect.x=1
+            self.x_speed=0
+
+        # if(self.ispastleft()) and pygame.key.get_pressed()[pygame.K_a]:
+        #     self.x_speed=0
+        # elif(self.ispastleft()):
+        #     self.rect.x=1
+        #     self.x_speed=0
+
         if(self.ispastright()):
-            self.rect.x=WIDTHINTILES*TILE_SIZE-(TILE_SIZE+1)
+            if not pygame.key.get_pressed()[pygame.K_a]:
+                self.rect.x=WIDTHINTILES*TILE_SIZE-(TILE_SIZE+1)
+            self.x_speed=0
         if(self.ispastbottom()):
             self.rect.x,self.rect.y=100,100
 
@@ -315,9 +327,9 @@ class HatKid(GameSprite):
 
     def tilesunder(self,map):
         """return a list of tiles below the kid"""
-        self.rect.move_ip([0,MAXYSPEED])
+        self.rect.move_ip([0,self.y_speed+1])
         hitlist=pygame.sprite.spritecollide(self,map.tiles,False)
-        self.rect.move_ip([0,-MAXYSPEED])
+        self.rect.move_ip([0,-(self.y_speed+1)])
         return hitlist
     def tilesabove(self,map):
         """return a list of tiles above the kid"""
@@ -345,12 +357,17 @@ class HatKid(GameSprite):
         #     self.rect.y=HEIGHTINTILES*TILE_SIZE+TILE_SIZE
 
     def ispastleft(self):
-        """true or false if touching barrier on left"""
-        return self.rect.x <= 0
+        self.rect.move_ip([0,-self.x_speed])
+        check=self.rect.x <= 0
+        self.rect.move_ip([0,self.x_speed])
+        return check
 
     def ispastright(self):
-        """true or false if touching barrier on right"""
-        return self.rect.x+TILE_SIZE >= WIDTHINTILES*TILE_SIZE
+        self.rect.move_ip([0,self.x_speed])
+        check=self.rect.x+TILE_SIZE >= WIDTHINTILES*TILE_SIZE
+        self.rect.move_ip([0,-self.x_speed])
+        return check
+
 
     def ispastbottom(self):
         """true or false if touching barrier on bottom"""
