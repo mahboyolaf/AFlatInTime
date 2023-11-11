@@ -210,12 +210,12 @@ class HatKid(GameSprite):
             direction_multiplyer=-1
         self.direction = direction
 
-        if abs(self.x_speed)<MAXSPEED:
+        if abs(self.x_speed)<MAXXSPEED:
             #accelerate
             self.x_speed+=(X_ACCELERATION*direction_multiplyer)
         else:
             #keep at max speed
-            self.x_speed= (MAXSPEED*direction_multiplyer)
+            self.x_speed= (MAXXSPEED*direction_multiplyer)
 
 
 
@@ -266,14 +266,16 @@ class HatKid(GameSprite):
         if self.check5pixel(map1):
             print ("cant double jump")
             self.canjump=False
-
-        if self.tilesunder(map1):
+        
+        if bottomhitlist:= self.tilesunder(map1):
             print("tile under")
             self.y_speed=0
             #self.rect.y-=MAXYSPEED
             self.jumps=0
             self.is_on_ground= True
             self.has_jumped_in_air= False
+            if pygame.key.get_pressed()[pygame.K_SPACE]:
+                self.rect.bottom=bottomhitlist[0].rect.top
 
         if self.tilesabove(map1):
             self.y_speed=0
@@ -294,9 +296,11 @@ class HatKid(GameSprite):
         self.animate()
 
         if(self.ispastleft()):
-            if not pygame.key.get_pressed()[pygame.K_a]:
-                self.rect.x=1
-            self.x_speed=0
+            #if not pygame.key.get_pressed()[pygame.K_a]:
+            #    self.rect.x=1
+            if 0>=self.x_speed:
+                self.x_speed=0
+                self.rect.left=0
 
         # if(self.ispastleft()) and pygame.key.get_pressed()[pygame.K_a]:
         #     self.x_speed=0
@@ -305,9 +309,9 @@ class HatKid(GameSprite):
         #     self.x_speed=0
 
         if(self.ispastright()):
-            if not pygame.key.get_pressed()[pygame.K_a]:
-                self.rect.x=WIDTHINTILES*TILE_SIZE-(TILE_SIZE+1)
-            self.x_speed=0
+            if 0<=self.x_speed:
+                self.x_speed=0
+                self.rect.right=SCREEN_WIDTH
         if(self.ispastbottom()):
             self.rect.x,self.rect.y=100,100
 
@@ -327,9 +331,11 @@ class HatKid(GameSprite):
 
     def tilesunder(self,map):
         """return a list of tiles below the kid"""
-        self.rect.move_ip([0,self.y_speed+1])
+        #checkahead=self.y_speed+1
+        checkahead=MAXYSPEED
+        self.rect.move_ip([0,checkahead])
         hitlist=pygame.sprite.spritecollide(self,map.tiles,False)
-        self.rect.move_ip([0,-(self.y_speed+1)])
+        self.rect.move_ip([0,-checkahead])
         return hitlist
     def tilesabove(self,map):
         """return a list of tiles above the kid"""
@@ -355,11 +361,12 @@ class HatKid(GameSprite):
         #     self.rect.x=WIDTHINTILES*TILE_SIZE+TILE_SIZE
         # if self.rect.y>=HEIGHTINTILES*TILE_SIZE+TILE_SIZE:
         #     self.rect.y=HEIGHTINTILES*TILE_SIZE+TILE_SIZE
-
+    
     def ispastleft(self):
-        self.rect.move_ip([0,-self.x_speed])
+        checkahead=MAXXSPEED
+        self.rect.move_ip([0,-checkahead])
         check=self.rect.x <= 0
-        self.rect.move_ip([0,self.x_speed])
+        self.rect.move_ip([0,checkahead])
         return check
 
     def ispastright(self):
