@@ -269,14 +269,14 @@ class HatKid(GameSprite):
         
         if bottomhitlist:= self.tilesunder(map1):
             print("tile under")
-            self.y_speed=0
             #self.rect.y-=MAXYSPEED
             self.jumps=0
             self.is_on_ground= True
             self.has_jumped_in_air= False
-            if pygame.key.get_pressed()[pygame.K_SPACE]:
+            if (not (pygame.key.get_pressed()[pygame.K_SPACE] or pygame.key.get_pressed()[pygame.K_w])) and 1>abs(self.y_speed):
+                print("not space")
+                self.y_speed=0
                 self.rect.bottom=bottomhitlist[0].rect.top
-
         if self.tilesabove(map1):
             self.y_speed=0
             self.rect.y+=1

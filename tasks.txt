@@ -1,0 +1,15 @@
+BIG
+main title screen
+enemys
+new mechanics(umbrella, dive, wall hang)
+pon system + shop(badges)
+badges
+health
+time pieces
+
+bosses?
+alt characters?
+
+SMALL
+jump overshoot
+clipping
