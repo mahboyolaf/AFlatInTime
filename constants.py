@@ -15,7 +15,7 @@ HATKIDSIZECLIMB=64,64
 HATKIDSIZEDIVE=64,64
 MAXXSPEED=3
 X_ACCELERATION=0.1
-MAXYSPEED=15
+MAXYSPEED=7.5
 pygame.mixer.init()
 JUMP_SFX=set_up.sfx("sounds/jumps/",0.1)
 DOUBLE_JUMP_SFX=set_up.sfx("sounds/doublejumps/",0.25)

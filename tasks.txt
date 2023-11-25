@@ -1,15 +1,17 @@
 BIG
 main title screen
+make levels
 enemys
-new mechanics(umbrella, dive, wall hang)
+new mechanics(umbrella, dive, ledge hang, wall slide(wall jump))
 pon system + shop(badges)
 badges
 health
 time pieces
+new sprites
+HAIR+cape physics
 
 bosses?
 alt characters?
 
 SMALL
-jump overshoot
-clipping
+clipping(into tiles-teleports you)
