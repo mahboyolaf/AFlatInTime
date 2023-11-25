@@ -1,7 +1,8 @@
 import pygame
 import constants
-import sprites
+from HatKid import *
 import os
+from GameSprite import *
 screen=pygame.display.set_mode((constants.SCREEN_WIDTH,constants.SCREEN_HEIGHT))
 #https://pinetools.com/split-image
 
@@ -16,7 +17,7 @@ mapfile="maps/map2.tmx"
 
 tilesetdir="maps/tilesets/tilesheet/"
 
-class Map(sprites.GameSprite):
+class Map(GameSprite):
     def __init__(self,tilesetdir,screen):
         self.tiles=[]
         self.importtileset(tilesetdir)

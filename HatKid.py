@@ -1,37 +1,8 @@
 
 import pygame
 import random
-import os
-import copy
 from constants import *
-class GameSprite(pygame.sprite.Sprite):
-    def __init__(self,x,y,filename=None,screen=None,size=None):
-
-        pygame.sprite.Sprite.__init__(self)
-        self.screen=screen
-        self.x=x
-        self.y=y
-        self.size=size
-
-        if filename != None:
-            self.set_image(filename)
-            
-    def set_image(self, filename):
-            self.image= pygame.image.load(filename)
-            if self.size != None:
-                self.image=pygame.transform.scale(self.image,self.size)
-            self.rect = self.image.get_rect()
-            self.rect.center = [self.x, self.y]
-
-    def update(self):
-        pass
-
-    def draw(self):
-        if self.image == None or self.rect==None:
-            raise Exception("Sprite image is not properly defined")
-
-        self.screen.blit(self.image, self.rect)
-
+from GameSprite import *
 
 class HatKid(GameSprite):
     def __init__(self,x,y,screen):
@@ -273,7 +244,8 @@ class HatKid(GameSprite):
             self.jumps=0
             self.is_on_ground= True
             self.has_jumped_in_air= False
-            if (not (pygame.key.get_pressed()[pygame.K_SPACE] or pygame.key.get_pressed()[pygame.K_w])) and 1>abs(self.y_speed):
+            #if (not (pygame.key.get_pressed()[pygame.K_SPACE] or pygame.key.get_pressed()[pygame.K_w])) and 1>abs(self.y_speed):
+            if self.y_speed >= 0:
                 print("not space")
                 self.y_speed=0
                 self.rect.bottom=bottomhitlist[0].rect.top
@@ -384,60 +356,3 @@ class HatKid(GameSprite):
         pygame.draw.rect(self.screen,"0xffffff",(self.rect.topleft[0],self.rect.topleft[1],HATKIDSIZEIDLE[0],HATKIDSIZEIDLE[1]))
         self.screen.blit(self.current_frame,self.rect)
 
-class LevelMap():
-    class Tile(GameSprite):
-        def __init__(self, x, y, filename=None, screen=None):
-            super().__init__(x, y, filename, screen)
-    
-        def set_image(self, filename):
-            self.image= pygame.image.load(filename)
-            self.image=pygame.transform.scale(self.image,(TILE_SIZE,TILE_SIZE))
-            self.rect = self.image.get_rect()
-            self.rect.topleft = [self.x, self.y]
-
-
-    def __init__(self,tilesetdir,mapfile,screen):
-        self.tiles=pygame.sprite.Group()
-        self.tileindexs=[]
-        #tileindex is location of tiles on screen (in tiles)
-        #tileindex[0][0] is the first tile in the first row and coloumn
-        self.screen=screen
-        self.mapfile = mapfile
-        self.tileset=[]
-        self.tilesetdir=tilesetdir
-
-        self.createtiles()
-
-
-    def createtiles(self):
-        with open(self.mapfile) as maptmx:
-            columnindex=-1
-            rowindex=-1
-            line=None
-            #TODO fix empty line in middle
-            while line !="":
-                line=maptmx.readline()
-                line=line.strip()
-                if line.find("<") == -1:
-                    rowindex+=1
-                    columnindex=-1
-                    for tileindex in line.split(sep=","):
-                        if tileindex.strip().isnumeric():
-                            columnindex+=1
-                            tileindex=int(tileindex)
-                            if tileindex!=0:
-                                filename = self.tilesetdir+r"%03d.png"%(tileindex)
-                                x=columnindex*TILE_SIZE
-                                y=rowindex*TILE_SIZE
-                                tile= LevelMap.Tile(x,y,filename,self.screen)
-                                self.tiles.add(tile)
-
-                        
-
-                        
-
-
-    
-    def draw(self):
-        self.screen.fill(("#888888"))
-        self.tiles.draw(self.screen)

@@ -1,8 +1,9 @@
-import sprites
+
 import constants
 import set_up
 import pygame
-
+from LevelMap import *
+from HatKid import *
 pygame.init()
 
 pygame.mixer.init()
@@ -19,12 +20,12 @@ screen=pygame.display.set_mode((constants.SCREEN_WIDTH,constants.SCREEN_HEIGHT))
 # map
 tilesetdir="maps/tilesets/tilesheet/"
 mapfiletmx= "maps/map2.tmx"
-map1=sprites.LevelMap(mapfile=mapfiletmx, tilesetdir=tilesetdir, screen=screen)
+map1=LevelMap(mapfile=mapfiletmx, tilesetdir=tilesetdir, screen=screen)
 
 
 # player
 
-hatkid=sprites.HatKid(constants.SCREEN_WIDTH-100,100,screen)
+hatkid=HatKid(constants.SCREEN_WIDTH-100,100,screen)
 #set up game loop
 game=True
 while game:
