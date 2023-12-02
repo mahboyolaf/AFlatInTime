@@ -9,9 +9,11 @@ health
 time pieces
 new sprites
 HAIR+cape physics
+make exe
 
+hats?
 bosses?
 alt characters?
 
 SMALL
-clipping(into tiles-teleports you)
+clipping(into tiles-teleports you- moveing while not pressing keys)

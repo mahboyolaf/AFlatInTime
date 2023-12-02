@@ -128,7 +128,7 @@ class HatKid(GameSprite):
 
     def stop_walk(self):
         #FIX: when it changes direction it doesnt slow down if you press both keys first
-        if self.is_on_ground:
+        if self.is_on_ground or (self.x_speed <-0.1 and pygame.key.get_pressed()[pygame.K_d]) or (self.x_speed >0.1 and pygame.key.get_pressed()[pygame.K_a]):
             if abs(self.x_speed)> 0.1:
                 #decelerate
                 self.x_speed *= 0.9
@@ -151,7 +151,8 @@ class HatKid(GameSprite):
         elif self.jumps==2:
         #doublejuump sfx
             randomnumber=random.randint(0,1)
-            DOUBLE_JUMP_SFX[randomnumber].play()
+            DOUBLE_JUMP_SFX[randomnumber].play() 
+            
 
     def check5pixel(self,map):
         """checks for doublejump"""
@@ -173,7 +174,7 @@ class HatKid(GameSprite):
         #if on ground does this
         if tilesunder:= self.tilesunder(map1):
             print("tile under")
-
+            self.jumpdirection=False
             self.jumps=0
             self.is_on_ground= True
             self.has_jumped_in_air= False
@@ -206,10 +207,16 @@ class HatKid(GameSprite):
         elif keyspressedlist[pygame.K_d]:
             if self.direction == "left":
                 self.stop_walk()
+            if self.jumps == 2 and self.jumpdirection == False:
+                self.x_speed=MAXXSPEED
+                self.jumpdirection=True
             self.walk("right")
         elif keyspressedlist[pygame.K_a]:
             if self.direction == "right":
                 self.stop_walk()
+            if self.jumps == 2 and self.jumpdirection == False:
+                self.x_speed=MAXXSPEED
+                self.jumpdirection=True
             self.walk("left")
         else:
             self.stop_walk()
