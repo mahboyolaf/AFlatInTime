@@ -9,7 +9,8 @@ health
 time pieces
 new sprites
 HAIR+cape physics
-make exe
+make portable exe
+proper hitboxes
 
 hats?
 bosses?
