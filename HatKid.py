@@ -124,7 +124,7 @@ class HatKid(GameSprite):
 
 
 
-        print (direction)
+        #print (direction)
 
     def stop_walk(self):
         #FIX: when it changes direction it doesnt slow down if you press both keys first
@@ -151,8 +151,11 @@ class HatKid(GameSprite):
         elif self.jumps==2:
         #doublejuump sfx
             randomnumber=random.randint(0,1)
-            DOUBLE_JUMP_SFX[randomnumber].play() 
-            
+            DOUBLE_JUMP_SFX[randomnumber].play()
+            if pygame.key.get_pressed()[pygame.K_d]:
+                self.x_speed=MAXXSPEED
+            elif pygame.key.get_pressed()[pygame.K_a]:
+                self.x_speed=-MAXXSPEED
 
     def check5pixel(self,map):
         """checks for doublejump"""
@@ -162,24 +165,25 @@ class HatKid(GameSprite):
         return hitlist
 
     def update(self,map1):
+        print(self.x_speed)
         #gravity
         if self.y_speed <= MAXYSPEED:
             self.y_speed +=0.2
 
         #checks if theres a tile
         if self.check5pixel(map1):
-            print ("cant double jump")
+            #print ("cant double jump")
             self.canjump=False
 
         #if on ground does this
         if tilesunder:= self.tilesunder(map1):
-            print("tile under")
+            #print("tile under")
             self.jumpdirection=False
             self.jumps=0
             self.is_on_ground= True
             self.has_jumped_in_air= False
             if self.y_speed >= 0:
-                print("not space")
+                #print("not space")
                 self.y_speed=0
                 self.rect.bottom=tilesunder[0].rect.top
         else:
@@ -207,16 +211,18 @@ class HatKid(GameSprite):
         elif keyspressedlist[pygame.K_d]:
             if self.direction == "left":
                 self.stop_walk()
-            if self.jumps == 2 and self.jumpdirection == False:
-                self.x_speed=MAXXSPEED
+            elif self.jumps == 2 and self.jumpdirection == False:
+                #self.x_speed=MAXXSPEED
                 self.jumpdirection=True
             self.walk("right")
+
         elif keyspressedlist[pygame.K_a]:
             if self.direction == "right":
                 self.stop_walk()
-            if self.jumps == 2 and self.jumpdirection == False:
-                self.x_speed=MAXXSPEED
+            elif self.jumps == 2 and self.jumpdirection == False:
+                #self.x_speed=MAXXSPEED
                 self.jumpdirection=True
+            
             self.walk("left")
         else:
             self.stop_walk()
