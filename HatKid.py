@@ -189,16 +189,19 @@ class HatKid(GameSprite):
         else:
             self.is_on_ground= False
 
-        if self.tilesabove(map1):
+        if (tilesabove:= self.tilesabove(map1)) and self.y_speed <= 0:
             self.y_speed=0
-            self.rect.y+=1
+            self.rect.top=tilesabove[0].rect.bottom
 
-        if self.tilesleft(map1) and pygame.key.get_pressed()[pygame.K_a]:
+        # and pygame.key.get_pressed()[pygame.K_a]
+        if (tilesleft:= self.tilesleft(map1)) and self.x_speed <= 0:
             self.x_speed=0
+            self.rect.left=tilesleft[0].rect.right
 
             
-        if self.tilesright(map1)and pygame.key.get_pressed()[pygame.K_d]:
+        if (tilesright:= self.tilesright(map1)) and self.x_speed >= 0:
             self.x_speed=0
+            self.rect.right=tilesright[0].rect.left
         #walking sprite
         
         #set up display frame
