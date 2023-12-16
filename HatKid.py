@@ -125,6 +125,9 @@ class HatKid(GameSprite):
 
 
         #print (direction)
+    def dive(self):
+        #s p e e d  in x speed, ctrl key to dive
+        pass
 
     def stop_walk(self):
         #FIX: when it changes direction it doesnt slow down if you press both keys first
