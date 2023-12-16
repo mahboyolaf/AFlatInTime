@@ -2,7 +2,6 @@ BIG
 main title screen
 make levels
 enemys
-new mechanics(umbrella, dive, ledge hang, wall slide(wall jump))
 pon system + shop(badges)
 badges
 health
@@ -11,10 +10,11 @@ new sprites
 HAIR+cape physics
 make portable exe
 proper hitboxes
+SMUG DANCE
 
 hats?
 bosses?
 alt characters?
 
-SMALL
-clipping(into tiles-teleports you- moveing while not pressing keys)
+new mechanics(umbrella, dive, ledge hang, wall slide(wall jump))
+
