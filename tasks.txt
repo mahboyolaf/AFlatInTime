@@ -18,3 +18,8 @@ alt characters?
 
 new mechanics(umbrella, dive, ledge hang, wall slide(wall jump))
 
+SMALL
+jump conditions
+    1 if on ground
+    2 if in air and not doublejumped
+

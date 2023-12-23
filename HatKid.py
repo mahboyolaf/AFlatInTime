@@ -142,7 +142,7 @@ class HatKid(GameSprite):
                 elif self.direction== "left":
                     self.current_frame=self.idleleft[0]
 
-    def jump(self):
+    def jump(self,map1):
         self.y_speed= -MAXYSPEED
         self.jumps+=1
         self.canjump= False
@@ -155,9 +155,9 @@ class HatKid(GameSprite):
         #doublejuump sfx
             randomnumber=random.randint(0,1)
             DOUBLE_JUMP_SFX[randomnumber].play()
-            if pygame.key.get_pressed()[pygame.K_d]:
-                self.x_speed=MAXXSPEED
-            elif pygame.key.get_pressed()[pygame.K_a]:
+            if pygame.key.get_pressed()[pygame.K_d] and not self.tilesright(map1):
+                self.x_speed=MAXXSPEED 
+            elif pygame.key.get_pressed()[pygame.K_a] and not self.tilesleft(map1):
                 self.x_speed=-MAXXSPEED
 
     def check5pixel(self,map):
@@ -168,7 +168,7 @@ class HatKid(GameSprite):
         return hitlist
 
     def update(self,map1):
-        print(self.x_speed)
+        #print(self.x_speed)
         #gravity
         if self.y_speed <= MAXYSPEED:
             self.y_speed +=0.2
@@ -211,7 +211,8 @@ class HatKid(GameSprite):
         
 
         keyspressedlist=pygame.key.get_pressed()
-
+        if keyspressedlist[pygame.K_LCTRL]:
+            print("wow dive")
         if keyspressedlist[pygame.K_d] and keyspressedlist[pygame.K_a]:
             self.stop_walk()
         elif keyspressedlist[pygame.K_d]:
@@ -235,7 +236,7 @@ class HatKid(GameSprite):
 
         if keyspressedlist[pygame.K_w] or keyspressedlist[pygame.K_SPACE]:
             if self.jumps <2 and self.canjump:
-                self.jump()
+                self.jump(map1)
         else:
             self.canjump=True
 
