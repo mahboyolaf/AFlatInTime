@@ -1,0 +1,23 @@
+BIG
+main title screen
+make levels
+enemys
+pon system + shop(badges)
+badges
+health
+time pieces
+new sprites
+HAIR+cape physics
+make portable exe
+proper hitboxes
+SMUG DANCE
+slopes
+idle
+
+hats?
+bosses?
+alt characters?
+
+new mechanics(umbrella, dive, ledge hang, wall slide(wall jump))
+
+SMALL
