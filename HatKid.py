@@ -143,21 +143,22 @@ class HatKid(GameSprite):
                     self.current_frame=self.idleleft[0]
 
     def jump(self,map1):
-        self.y_speed= -MAXYSPEED
         self.jumps+=1
         self.canjump= False
-
-        if self.jumps==1:
+        if self.is_on_ground:
         #jump sfx
             randomnumber=random.randint(0,13)
             JUMP_SFX[randomnumber].play()
-        elif self.jumps==2:
+            self.y_speed= -MAXYSPEED
+        elif not self.has_jumped_in_air:
         #doublejuump sfx
             randomnumber=random.randint(0,1)
             DOUBLE_JUMP_SFX[randomnumber].play()
-            if pygame.key.get_pressed()[pygame.K_d] and not self.tilesright(map1):
+            self.has_jumped_in_air=True
+            self.y_speed= -MAXYSPEED
+            if pygame.key.get_pressed()[pygame.K_d] and not self.tilesright(map1) and not pygame.key.get_pressed()[pygame.K_a]:
                 self.x_speed=MAXXSPEED 
-            elif pygame.key.get_pressed()[pygame.K_a] and not self.tilesleft(map1):
+            elif pygame.key.get_pressed()[pygame.K_a] and not self.tilesleft(map1) and not pygame.key.get_pressed()[pygame.K_d]:
                 self.x_speed=-MAXXSPEED
 
     def check5pixel(self,map):
