@@ -11,6 +11,8 @@ HAIR+cape physics
 make portable exe
 proper hitboxes
 SMUG DANCE
+slopes
+idle
 
 hats?
 bosses?

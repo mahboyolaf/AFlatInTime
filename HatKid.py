@@ -6,20 +6,20 @@ from GameSprite import *
 
 class HatKid(GameSprite):
     def __init__(self,x,y,screen):
-        hatkid_filename = "sprite/HatKid/walk1.png"
+        hatkid_filename = "sprite/HatKid/walk/walk1.png"
         size = (TILE_SIZE,TILE_SIZE)
         super().__init__(x,y,hatkid_filename,screen,size)
 
         self.walks=[]
         
-        self.walkright=self.load_walk("sprite/HatKid/new_sprite","right")
-        self.walkleft=self.load_walk("sprite/HatKid/new_sprite","left")
-        self.idleright=self.load_idle("sprite/HatKid/new_sprite","right")
-        self.idleleft=self.load_idle("sprite/HatKid/new_sprite","left")
-        self.diveright=self.load_dive("sprite/HatKid/new_sprite","right")
-        self.diveleft=self.load_dive("sprite/HatKid/new_sprite","left")
-        self.climbright=self.load_climb("sprite/HatKid/new_sprite","right")
-        self.climbleft=self.load_climb("sprite/HatKid/new_sprite","left")
+        self.walkright=self.load_walk("sprite/HatKid/walk","right")
+        self.walkleft=self.load_walk("sprite/HatKid/walk","left")
+        self.idleright=self.load_idle("sprite/HatKid/idle","right")
+        self.idleleft=self.load_idle("sprite/HatKid/idle","left")
+        self.diveright=self.load_dive("sprite/HatKid/dive","right")
+        self.diveleft=self.load_dive("sprite/HatKid/dive","left")
+        self.climbright=self.load_climb("sprite/HatKid/climb","right")
+        self.climbleft=self.load_climb("sprite/HatKid/climb","left")
 
         self.can_jump=True
         self.jumps=0

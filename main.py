@@ -19,7 +19,7 @@ screen=pygame.display.set_mode((constants.SCREEN_WIDTH,constants.SCREEN_HEIGHT))
 
 # map
 tilesetdir="maps/tilesets/tilesheet/"
-mapfiletmx= "maps/map2.tmx"
+mapfiletmx= "maps/testmap.tmx"
 map1=LevelMap(mapfile=mapfiletmx, tilesetdir=tilesetdir, screen=screen)
 
 
