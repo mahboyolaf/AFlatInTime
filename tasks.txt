@@ -21,3 +21,14 @@ alt characters?
 new mechanics(umbrella, dive, ledge hang, wall slide(wall jump))
 
 SMALL
+
+motion class
+    sprites
+    direction of speed
+    direction facing
+    max speeds
+    key inputs
+    conditions to start and stop
+    flags (states)
+    acceleration
+    sound effects

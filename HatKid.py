@@ -125,9 +125,7 @@ class HatKid(GameSprite):
 
 
         #print (direction)
-    def dive(self):
-        #s p e e d  in x speed, ctrl key to dive
-        pass
+
 
     def stop_walk(self):
         #FIX: when it changes direction it doesnt slow down if you press both keys first
@@ -141,6 +139,34 @@ class HatKid(GameSprite):
                     self.current_frame=self.idleright[0]
                 elif self.direction== "left":
                     self.current_frame=self.idleleft[0]
+    def dive(self):
+        if self.has_dived==False:
+            if self.is_on_ground:
+                if pygame.key.get_pressed()[pygame.K_d]:
+                    print("right ground dive")
+                    self.x_speed=MAXXSPEED+3
+                    self.rect.y-=10
+                    self.has_dived=True
+                if pygame.key.get_pressed()[pygame.K_a]:
+                    print("left ground dive")
+                    self.x_speed=-(MAXXSPEED+3)
+                    self.rect.y-=10
+                    self.has_dived=True
+            else:
+                if self.direction== "right":
+                    print("right air dive")
+                    self.x_speed=MAXXSPEED+3
+                    self.has_dived=True
+                if self.direction== "left":
+                    print("left air dive")
+                    self.x_speed=-(MAXXSPEED+3)
+                    self.has_dived=True
+    def dive_cancel(self):
+        if self.has_dived:
+            self.rect.y-=5
+            self.has_jumped_in_air=True
+            self.y_speed=MAXXSPEED
+
 
     def jump(self,map1):
         self.jumps+=1
@@ -186,6 +212,7 @@ class HatKid(GameSprite):
             self.jumps=0
             self.is_on_ground= True
             self.has_jumped_in_air= False
+            self.has_dived=False
             if self.y_speed >= 0:
                 #print("not space")
                 self.y_speed=0
@@ -212,9 +239,11 @@ class HatKid(GameSprite):
         
 
         keyspressedlist=pygame.key.get_pressed()
+        if pygame.key.get_pressed()[pygame.K_SPACE]:
+            self.dive_cancel
         if keyspressedlist[pygame.K_LCTRL]:
-            print("wow dive")
-        if keyspressedlist[pygame.K_d] and keyspressedlist[pygame.K_a]:
+            self.dive()
+        elif keyspressedlist[pygame.K_d] and keyspressedlist[pygame.K_a]:
             self.stop_walk()
         elif keyspressedlist[pygame.K_d]:
             if self.direction == "left":
@@ -240,7 +269,7 @@ class HatKid(GameSprite):
                 self.jump(map1)
         else:
             self.canjump=True
-
+        
         if(self.ispastleft()):
             if 0>=self.x_speed:
                 self.x_speed=0
