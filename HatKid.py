@@ -1,4 +1,4 @@
-
+from Movement import *
 import pygame
 import random
 from constants import *
@@ -11,9 +11,9 @@ class HatKid(GameSprite):
         super().__init__(x,y,hatkid_filename,screen,size)
 
         self.walks=[]
-        
-        self.walkright=self.load_walk("sprite/HatKid/walk","right")
-        self.walkleft=self.load_walk("sprite/HatKid/walk","left")
+        walk=Walk()
+        self.walkright=walk.sprites_right
+        self.walkleft=walk.sprites_left
         self.idleright=self.load_idle("sprite/HatKid/idle","right")
         self.idleleft=self.load_idle("sprite/HatKid/idle","left")
         self.diveright=self.load_dive("sprite/HatKid/dive","right")
@@ -33,15 +33,6 @@ class HatKid(GameSprite):
         self.y_speed=0
         self.canjump= True
         self.walk_index=0
-    def load_walk(self,spritedir,direction):
-        walks=[]
-        for counter in range (1,5):
-            walk= pygame.image.load(spritedir+"/walk"+str(counter)+".png")
-            walk=pygame.transform.scale(walk,HATKIDSIZEWALK)
-            if direction=="left":
-                walk=pygame.transform.flip(walk,True,False)
-            walks.append(walk)
-        return tuple(walks)
 
     def load_idle(self,spritedir,direction):
         idles=[]
