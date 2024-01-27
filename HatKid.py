@@ -5,15 +5,14 @@ from constants import *
 from GameSprite import *
 
 class HatKid(GameSprite):
-    def __init__(self,x,y,screen):
+    def __init__(self,x,y,screen,map):
         hatkid_filename = "sprite/HatKid/walk/walk1.png"
         size = (TILE_SIZE,TILE_SIZE)
         super().__init__(x,y,hatkid_filename,screen,size)
-
         self.walks=[]
-        walk=Walk()
-        self.walkright=walk.sprites_right
-        self.walkleft=walk.sprites_left
+        self.walk1=Walk(map,self)
+        self.walkright=self.walk1.sprites_right
+        self.walkleft=self.walk1.sprites_left
         self.idleright=self.load_idle("sprite/HatKid/idle","right")
         self.idleleft=self.load_idle("sprite/HatKid/idle","left")
         self.diveright=self.load_dive("sprite/HatKid/dive","right")
@@ -190,6 +189,7 @@ class HatKid(GameSprite):
         #gravity
         if self.y_speed <= MAXYSPEED:
             self.y_speed +=0.2
+        print(self.walk1.can())
 
         #checks if theres a tile
         if self.check5pixel(map1):

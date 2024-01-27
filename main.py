@@ -25,7 +25,7 @@ map1=LevelMap(mapfile=mapfiletmx, tilesetdir=tilesetdir, screen=screen)
 
 # player
 
-hatkid=HatKid(constants.SCREEN_WIDTH-100,100,screen)
+hatkid=HatKid(constants.SCREEN_WIDTH-100,100,screen,map1)
 #set up game loop
 game=True
 while game:
