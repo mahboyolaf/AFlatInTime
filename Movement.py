@@ -57,7 +57,7 @@ class Walk(Movement):
     def __init__(self,map,hatkid):
         super().__init__(map,hatkid)
         self.spritedir="sprite/HatKid/walk/walk"
-        direction=None
+        self.direction=None
         self.sprites_right=self.load_sprites()
             
         self.sprites_left=tuple([pygame.transform.flip(sprite,True,False) for sprite in self.sprites_right])
@@ -77,4 +77,28 @@ class Walk(Movement):
     def can(self):
         """returns true if can walk"""
         return self.is_on_ground()
+    def start(self):
+        direction_multiplier=None
+        if self.direction=="right":
+            self.hatkid.current_frame=self.hatkid.walkright[self.hatkid.get_walk_index()]
+            direction_multiplier=1
+        elif self.direction=="left":
+            self.hatkid.current_frame=self.hatkid.walkleft[self.hatkid.get_walk_index()]
+            direction_multiplier=-1
 
+        if abs(self.hatkid.x_speed)<self.MAXXSPEED:
+            #accelerate
+            self.hatkid.x_speed=self.hatkid.x_speed+(self.X_ACCELERATION*direction_multiplier)
+            print("acceleration",self.MAXXSPEED,self.hatkid.x_speed,self.X_ACCELERATION)
+            print("acceleration",self.X_ACCELERATION,self.X_ACCELERATION*direction_multiplier,self.hatkid.x_speed)
+            
+        else:
+            #keep at max speed
+            self.hatkid.x_speed= (self.MAXXSPEED*direction_multiplier)
+            print("deceleration",self.X_ACCELERATION)
+        print(self.MAXXSPEED,self.hatkid.x_speed,self.X_ACCELERATION)
+
+    def set_direction(self,direction):
+        """set walking direction"""
+        self.direction=direction
+        

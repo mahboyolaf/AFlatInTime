@@ -251,7 +251,9 @@ class HatKid(GameSprite):
                 #self.x_speed=MAXXSPEED
                 self.jumpdirection=True
             
-            self.walk("left")
+            #self.walk("left")
+            self.walk1.set_direction("left")
+            self.walk1.start()
         else:
             self.stop_walk()
 
