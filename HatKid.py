@@ -31,7 +31,6 @@ class HatKid(GameSprite):
         self.has_jumped_in_air= False
         self.y_speed=0
         self.canjump= True
-        self.walk_index=0
 
     def load_idle(self,spritedir,direction):
         idles=[]
@@ -85,13 +84,6 @@ class HatKid(GameSprite):
         #         self.jump()
         # else:
         #     self.canjump=True
-
-    def get_walk_index(self):
-        if self.walk_index > 4-1/15:
-            self.walk_index = 0
-        else:
-            self.walk_index += 1/15
-        return int(self.walk_index)
 
     def dive(self):
         if self.has_dived==False:

@@ -81,20 +81,24 @@ class Walk(Movement):
         """starts walking movement"""
         direction_multiplier=None
         if self.direction=="right":
-            self.hatkid.current_frame=self.hatkid.walkright[self.hatkid.get_walk_index()]
+            self.hatkid.current_frame=self.hatkid.walkright[self.get_sprite_index()]
             direction_multiplier=1
         elif self.direction=="left":
-            self.hatkid.current_frame=self.hatkid.walkleft[self.hatkid.get_walk_index()]
+            self.hatkid.current_frame=self.hatkid.walkleft[self.get_sprite_index()]
             direction_multiplier=-1
-
         if abs(self.hatkid.x_speed)<self.MAXXSPEED:
             #accelerate
             self.hatkid.x_speed=self.hatkid.x_speed+(self.X_ACCELERATION*direction_multiplier)
-            
-            
         else:
             #keep at max speed
             self.hatkid.x_speed= (self.MAXXSPEED*direction_multiplier)
+
+    def get_sprite_index(self):
+        if self.hatkid.walk_index > 4-1/15:
+            self.hatkid.walk_index = 0
+        else:
+            self.hatkid.walk_index += 1/15
+        return int(self.hatkid.walk_index)
 
     def set_direction(self,direction):
         """set walking direction"""
