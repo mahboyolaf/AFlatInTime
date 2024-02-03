@@ -78,6 +78,7 @@ class Walk(Movement):
         """returns true if can walk"""
         return self.is_on_ground()
     def start(self):
+        """starts walking movement"""
         direction_multiplier=None
         if self.direction=="right":
             self.hatkid.current_frame=self.hatkid.walkright[self.hatkid.get_walk_index()]
@@ -89,16 +90,24 @@ class Walk(Movement):
         if abs(self.hatkid.x_speed)<self.MAXXSPEED:
             #accelerate
             self.hatkid.x_speed=self.hatkid.x_speed+(self.X_ACCELERATION*direction_multiplier)
-            print("acceleration",self.MAXXSPEED,self.hatkid.x_speed,self.X_ACCELERATION)
-            print("acceleration",self.X_ACCELERATION,self.X_ACCELERATION*direction_multiplier,self.hatkid.x_speed)
+            
             
         else:
             #keep at max speed
             self.hatkid.x_speed= (self.MAXXSPEED*direction_multiplier)
-            print("deceleration",self.X_ACCELERATION)
-        print(self.MAXXSPEED,self.hatkid.x_speed,self.X_ACCELERATION)
 
     def set_direction(self,direction):
         """set walking direction"""
         self.direction=direction
         self.hatkid.direction=self.direction
+    
+    def stop(self):
+        """stops walking movement with decelerate"""
+        if abs(self.hatkid.x_speed)> 0.1:
+            self.hatkid.x_speed *= 0.9
+        else:
+            self.hatkid.x_speed=0
+            if self.hatkid.direction== "right":
+                self.hatkid.current_frame=self.hatkid.idleright[0]
+            elif self.hatkid.direction== "left":
+                self.hatkid.current_frame=self.hatkid.idleleft[0]

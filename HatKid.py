@@ -10,9 +10,9 @@ class HatKid(GameSprite):
         size = (TILE_SIZE,TILE_SIZE)
         super().__init__(x,y,hatkid_filename,screen,size)
         self.walks=[]
-        self.walk1=Walk(map,self)
-        self.walkright=self.walk1.sprites_right
-        self.walkleft=self.walk1.sprites_left
+        self.walk=Walk(map,self)
+        self.walkright=self.walk.sprites_right
+        self.walkleft=self.walk.sprites_left
         self.idleright=self.load_idle("sprite/HatKid/idle","right")
         self.idleleft=self.load_idle("sprite/HatKid/idle","left")
         self.diveright=self.load_dive("sprite/HatKid/dive","right")
@@ -68,17 +68,17 @@ class HatKid(GameSprite):
         # keyspressedlist=pygame.key.get_pressed()
 
         # if keyspressedlist[pygame.K_d] and keyspressedlist[pygame.K_a]:
-        #     self.stop_walk()
+        #     self.walk.stop()
         # elif keyspressedlist[pygame.K_d]:
         #     if self.direction == "left":
-        #         self.stop_walk()
+        #         self.walk.stop()
         #     self.walk("right")
         # elif keyspressedlist[pygame.K_a]:
         #     if self.direction == "right":
-        #         self.stop_walk()
+        #         self.walk.stop()
         #     self.walk("left")
         # else:
-        #     self.stop_walk()
+        #     self.walk.stop()
 
         # if keyspressedlist[pygame.K_w] or keyspressedlist[pygame.K_SPACE]:
         #     if self.jumps <2 and self.canjump:
@@ -93,42 +93,6 @@ class HatKid(GameSprite):
             self.walk_index += 1/15
         return int(self.walk_index)
 
-    def walk(self,direction):
-        """set current frame"""
-        #walking right
-        direction_multiplyer=None
-        if self.direction=="right":
-            self.current_frame=self.walkright[self.get_walk_index()]
-            direction_multiplyer=1
-        elif self.direction=="left":
-            self.current_frame=self.walkleft[self.get_walk_index()]
-            direction_multiplyer=-1
-        self.direction = direction
-
-        if abs(self.x_speed)<MAXXSPEED:
-            #accelerate
-            self.x_speed+=(X_ACCELERATION*direction_multiplyer)
-        else:
-            #keep at max speed
-            self.x_speed= (MAXXSPEED*direction_multiplyer)
-
-
-
-        #print (direction)
-
-
-    def stop_walk(self):
-        #FIX: when it changes direction it doesnt slow down if you press both keys first
-        if self.is_on_ground or (self.x_speed <-0.1 and pygame.key.get_pressed()[pygame.K_d]) or (self.x_speed >0.1 and pygame.key.get_pressed()[pygame.K_a]):
-            if abs(self.x_speed)> 0.1:
-                #decelerate
-                self.x_speed *= 0.9
-            else:
-                self.x_speed=0
-                if self.direction== "right":
-                    self.current_frame=self.idleright[0]
-                elif self.direction== "left":
-                    self.current_frame=self.idleleft[0]
     def dive(self):
         if self.has_dived==False:
             if self.is_on_ground:
@@ -189,7 +153,7 @@ class HatKid(GameSprite):
         #gravity
         if self.y_speed <= MAXYSPEED:
             self.y_speed +=0.2
-        print(self.walk1.can())
+
 
         #checks if theres a tile
         if self.check5pixel(map1):
@@ -229,35 +193,38 @@ class HatKid(GameSprite):
         #set up display frame
         
 
+    
+
+
         keyspressedlist=pygame.key.get_pressed()
         if pygame.key.get_pressed()[pygame.K_SPACE]:
             self.dive_cancel
         if keyspressedlist[pygame.K_LCTRL]:
             self.dive()
+
+
         elif keyspressedlist[pygame.K_d] and keyspressedlist[pygame.K_a]:
-            self.stop_walk()
+            self.walk.stop()
         elif keyspressedlist[pygame.K_d]:
             if self.direction == "left":
-                self.stop_walk()
+                self.walk.stop()
+            elif self.x_speed <-0.1:
+                self.walk.stop()
             elif self.jumps == 2 and self.jumpdirection == False:
-                #self.x_speed=MAXXSPEED
                 self.jumpdirection=True
-            #self.walk("right")
-            self.walk1.set_direction("right")
-            self.walk1.start()
-
+            self.walk.set_direction("right")
+            self.walk.start()
         elif keyspressedlist[pygame.K_a]:
             if self.direction == "right":
-                self.stop_walk()
+                self.walk.stop()
+            elif self.x_speed >0.1:
+                self.walk.stop()  
             elif self.jumps == 2 and self.jumpdirection == False:
-                #self.x_speed=MAXXSPEED
                 self.jumpdirection=True
-            
-            #self.walk("left")
-            self.walk1.set_direction("left")
-            self.walk1.start()
+            self.walk.set_direction("left")
+            self.walk.start()
         else:
-            self.stop_walk()
+            self.walk.stop()
 
         if keyspressedlist[pygame.K_w] or keyspressedlist[pygame.K_SPACE]:
             if self.jumps <2 and self.canjump:
