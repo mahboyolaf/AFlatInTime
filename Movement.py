@@ -101,4 +101,4 @@ class Walk(Movement):
     def set_direction(self,direction):
         """set walking direction"""
         self.direction=direction
-        
+        self.hatkid.direction=self.direction

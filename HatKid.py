@@ -242,7 +242,9 @@ class HatKid(GameSprite):
             elif self.jumps == 2 and self.jumpdirection == False:
                 #self.x_speed=MAXXSPEED
                 self.jumpdirection=True
-            self.walk("right")
+            #self.walk("right")
+            self.walk1.set_direction("right")
+            self.walk1.start()
 
         elif keyspressedlist[pygame.K_a]:
             if self.direction == "right":
