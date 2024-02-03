@@ -12,6 +12,9 @@ from GameSprite import *
 # acceleration
 # sound effects
 class Movement():
+    class Direction():
+        LEFT="left"
+        RIGHT="right"
     def __init__(self,map,hatkid):
         self.MAXXSPEED=3
         self.MAXYSPEED=7.5
@@ -80,10 +83,10 @@ class Walk(Movement):
     def start(self):
         """starts walking movement"""
         direction_multiplier=None
-        if self.direction=="right":
+        if self.direction==Movement.Direction.RIGHT:
             self.hatkid.current_frame=self.hatkid.walkright[self.get_sprite_index()]
             direction_multiplier=1
-        elif self.direction=="left":
+        elif self.direction==Movement.Direction.LEFT:
             self.hatkid.current_frame=self.hatkid.walkleft[self.get_sprite_index()]
             direction_multiplier=-1
         if abs(self.hatkid.x_speed)<self.MAXXSPEED:
@@ -111,7 +114,7 @@ class Walk(Movement):
             self.hatkid.x_speed *= 0.9
         else:
             self.hatkid.x_speed=0
-            if self.hatkid.direction== "right":
+            if self.hatkid.direction==Movement.Direction.RIGHT:
                 self.hatkid.current_frame=self.hatkid.idleright[0]
-            elif self.hatkid.direction== "left":
+            elif self.hatkid.direction==Movement.Direction.LEFT:
                 self.hatkid.current_frame=self.hatkid.idleleft[0]

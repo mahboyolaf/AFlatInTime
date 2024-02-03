@@ -13,17 +13,17 @@ class HatKid(GameSprite):
         self.walk=Walk(map,self)
         self.walkright=self.walk.sprites_right
         self.walkleft=self.walk.sprites_left
-        self.idleright=self.load_idle("sprite/HatKid/idle","right")
-        self.idleleft=self.load_idle("sprite/HatKid/idle","left")
-        self.diveright=self.load_dive("sprite/HatKid/dive","right")
-        self.diveleft=self.load_dive("sprite/HatKid/dive","left")
-        self.climbright=self.load_climb("sprite/HatKid/climb","right")
-        self.climbleft=self.load_climb("sprite/HatKid/climb","left")
+        self.idleright=self.load_idle("sprite/HatKid/idle",Movement.Direction.RIGHT)
+        self.idleleft=self.load_idle("sprite/HatKid/idle",Movement.Direction.LEFT)
+        self.diveright=self.load_dive("sprite/HatKid/dive",Movement.Direction.RIGHT)
+        self.diveleft=self.load_dive("sprite/HatKid/dive",Movement.Direction.LEFT)
+        self.climbright=self.load_climb("sprite/HatKid/climb",Movement.Direction.RIGHT)
+        self.climbleft=self.load_climb("sprite/HatKid/climb",Movement.Direction.LEFT)
 
         self.can_jump=True
         self.jumps=0
         self.can_jump = True
-        self.direction="right"
+        self.direction=Movement.Direction.RIGHT
         self.x_speed = 0
         self.current_frame = self.idleright[0]
         self.walk_index= 0
@@ -37,7 +37,7 @@ class HatKid(GameSprite):
         for counter in range (1,4):
             idle= pygame.image.load(spritedir+"/idle"+str(counter)+".png")
             idle=pygame.transform.scale(idle,HATKIDSIZEIDLE)
-            if direction=="left":
+            if direction==Movement.Direction.LEFT:
                 idle=pygame.transform.flip(idle,True,False)
             idles.append(idle)
         return tuple(idles)
@@ -47,7 +47,7 @@ class HatKid(GameSprite):
         for counter in range (1,3):
             dive= pygame.image.load(spritedir+"/dive"+str(counter)+".png")
             dive=pygame.transform.scale(dive,HATKIDSIZEDIVE)
-            if direction=="left":
+            if direction==Movement.Direction.LEFT:
                 dive=pygame.transform.flip(dive,True,False)
             dives.append(dive)
         return tuple(dives)
@@ -57,7 +57,7 @@ class HatKid(GameSprite):
         for counter in range (1,2):
             climb= pygame.image.load(spritedir+"/climb"+str(counter)+".png")
             climb=pygame.transform.scale(climb,HATKIDSIZECLIMB)
-            if direction=="left":
+            if direction==Movement.Direction.LEFT:
                 climb=pygame.transform.flip(climb,True,False)
             climbs.append(climb)
         return tuple(climbs)    
@@ -69,13 +69,13 @@ class HatKid(GameSprite):
         # if keyspressedlist[pygame.K_d] and keyspressedlist[pygame.K_a]:
         #     self.walk.stop()
         # elif keyspressedlist[pygame.K_d]:
-        #     if self.direction == "left":
+        #     if self.direction == Movement.Direction.LEFT:
         #         self.walk.stop()
-        #     self.walk("right")
+        #     self.walk(Movement.Direction.RIGHT)
         # elif keyspressedlist[pygame.K_a]:
-        #     if self.direction == "right":
+        #     if self.direction == Movement.Direction.RIGHT:
         #         self.walk.stop()
-        #     self.walk("left")
+        #     self.walk(Movement.Direction.LEFT)
         # else:
         #     self.walk.stop()
 
@@ -99,11 +99,11 @@ class HatKid(GameSprite):
                     self.rect.y-=10
                     self.has_dived=True
             else:
-                if self.direction== "right":
+                if self.direction== Movement.Direction.RIGHT:
                     print("right air dive")
                     self.x_speed=MAXXSPEED+3
                     self.has_dived=True
-                if self.direction== "left":
+                if self.direction== Movement.Direction.LEFT:
                     print("left air dive")
                     self.x_speed=-(MAXXSPEED+3)
                     self.has_dived=True
@@ -145,7 +145,6 @@ class HatKid(GameSprite):
         #gravity
         if self.y_speed <= MAXYSPEED:
             self.y_speed +=0.2
-
 
         #checks if theres a tile
         if self.check5pixel(map1):
@@ -198,22 +197,22 @@ class HatKid(GameSprite):
         elif keyspressedlist[pygame.K_d] and keyspressedlist[pygame.K_a]:
             self.walk.stop()
         elif keyspressedlist[pygame.K_d]:
-            if self.direction == "left":
+            if self.direction == Movement.Direction.LEFT:
                 self.walk.stop()
             elif self.x_speed <-0.1:
                 self.walk.stop()
             elif self.jumps == 2 and self.jumpdirection == False:
                 self.jumpdirection=True
-            self.walk.set_direction("right")
+            self.walk.set_direction(Movement.Direction.RIGHT)
             self.walk.start()
         elif keyspressedlist[pygame.K_a]:
-            if self.direction == "right":
+            if self.direction == Movement.Direction.RIGHT:
                 self.walk.stop()
             elif self.x_speed >0.1:
                 self.walk.stop()  
             elif self.jumps == 2 and self.jumpdirection == False:
                 self.jumpdirection=True
-            self.walk.set_direction("left")
+            self.walk.set_direction(Movement.Direction.LEFT)
             self.walk.start()
         else:
             self.walk.stop()
