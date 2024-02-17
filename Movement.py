@@ -21,7 +21,6 @@ class Movement():
         self.X_ACCELERATION=0.1
         self.x_speed = 0
         self.y_speed=0
-        self.canjump= True
         self.has_jumped_in_air= False
         self.map=map
         self.hatkid=hatkid
@@ -55,6 +54,42 @@ class Movement():
         self.hatkid.rect.move_ip([0,-checkahead])
         return hitlist
 
+class Jump(Movement):
+    def __init__(self,map,hatkid):
+        super().__init__(map,hatkid)
+        self.direction=None
+        self.map=map
+        self.count=0
+
+    def start(self):
+        self.count+=1
+        self.hatkid.canjump= False
+        if self.hatkid.is_on_ground:
+        #jump sfx
+            randomnumber=random.randint(0,13)
+            JUMP_SFX[randomnumber].play()
+            self.hatkid.y_speed= -MAXYSPEED
+        elif not self.hatkid.has_jumped_in_air:
+        #doublejuump sfx
+            randomnumber=random.randint(0,1)
+            DOUBLE_JUMP_SFX[randomnumber].play()
+            self.hatkid.has_jumped_in_air=True
+            self.hatkid.y_speed= -MAXYSPEED
+            if pygame.key.get_pressed()[pygame.K_d] and not self.hatkid.tilesright(self.map) and not pygame.key.get_pressed()[pygame.K_a]:
+                self.hatkid.x_speed=MAXXSPEED 
+            elif pygame.key.get_pressed()[pygame.K_a] and not self.hatkid.tilesleft(self.map) and not pygame.key.get_pressed()[pygame.K_d]:
+                self.hatkid.x_speed=-MAXXSPEED
+
+    def can(self,reset=None):
+        """returns true if can jump"""
+        if reset!=None:
+            return reset
+        else:
+            print (self.is_on_ground(), self.count < 2, self.hatkid.tilesabove(self.map))
+            return  self.count < 2 and not self.hatkid.tilesabove(self.map)
+        
+    
+        
 
 class Walk(Movement):
     def __init__(self,map,hatkid):
