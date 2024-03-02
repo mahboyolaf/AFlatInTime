@@ -23,6 +23,7 @@ new mechanics(umbrella, dive, ledge hang, wall slide(wall jump))
 SMALL
 
 motion class
+    MORE DYNAMIC MAX SPEED
     sprites
     direction of speed
     direction facing
