@@ -4,20 +4,30 @@ import random
 from constants import *
 from GameSprite import *
 
+class Hitbox(GameSprite):
+    def __init__(self,x,y,screen=None,size=None,width=64,height=64):
+        super().__init__(x,y,None,screen,size)
+        self.width=width
+        self.height=height
+        pygame.draw.rect(screen,(100,100,100),(x,y,width,height))
+
 class HatKid(GameSprite):
     def __init__(self,x,y,screen,map):
         hatkid_filename = "sprite/HatKid/walk/walk1.png"
         size = (TILE_SIZE,TILE_SIZE)
         super().__init__(x,y,hatkid_filename,screen,size)
+        self.hitbox=Hitbox(x,y,screen,size,width=32,height=64)
+
         self.walks=[]
         self.walk=Walk(map,self)
         self.jump=Jump(map,self)
+        self.dive=Dive(map,self)
         self.walkright=self.walk.sprites_right
         self.walkleft=self.walk.sprites_left
         self.idleright=self.load_idle("sprite/HatKid/idle",Movement.Direction.RIGHT)
         self.idleleft=self.load_idle("sprite/HatKid/idle",Movement.Direction.LEFT)
-        self.diveright=self.load_dive("sprite/HatKid/dive",Movement.Direction.RIGHT)
-        self.diveleft=self.load_dive("sprite/HatKid/dive",Movement.Direction.LEFT)
+        self.diveright=self.dive.diveright
+        self.diveleft=self.dive.diveleft
         self.climbright=self.load_climb("sprite/HatKid/climb",Movement.Direction.RIGHT)
         self.climbleft=self.load_climb("sprite/HatKid/climb",Movement.Direction.LEFT)
 
@@ -40,15 +50,15 @@ class HatKid(GameSprite):
             idles.append(idle)
         return tuple(idles)
     
-    def load_dive(self,spritedir,direction):
-        dives=[]
-        for counter in range (1,3):
-            dive= pygame.image.load(spritedir+"/dive"+str(counter)+".png")
-            dive=pygame.transform.scale(dive,HATKIDSIZEDIVE)
-            if direction==Movement.Direction.LEFT:
-                dive=pygame.transform.flip(dive,True,False)
-            dives.append(dive)
-        return tuple(dives)
+    # def load_dive(self,spritedir,direction):
+    #     dives=[]
+    #     for counter in range (1,3):
+    #         dive= pygame.image.load(spritedir+"/dive"+str(counter)+".png")
+    #         dive=pygame.transform.scale(dive,HATKIDSIZEDIVE)
+    #         if direction==Movement.Direction.LEFT:
+    #             dive=pygame.transform.flip(dive,True,False)
+    #         dives.append(dive)
+    #     return tuple(dives)
     
     def load_climb(self,spritedir,direction):
         climbs=[]
@@ -61,33 +71,36 @@ class HatKid(GameSprite):
         return tuple(climbs)    
 
 
-    def dive(self):
-        if self.has_dived==False:
-            if self.is_on_ground:
-                if pygame.key.get_pressed()[pygame.K_d]:
-                    print("right ground dive")
-                    self.x_speed=MAXXSPEED+3
-                    self.rect.y-=10
-                    self.has_dived=True
-                if pygame.key.get_pressed()[pygame.K_a]:
-                    print("left ground dive")
-                    self.x_speed=-(MAXXSPEED+3)
-                    self.rect.y-=10
-                    self.has_dived=True
-            else:
-                if self.direction== Movement.Direction.RIGHT:
-                    print("right air dive")
-                    self.x_speed=MAXXSPEED+3
-                    self.has_dived=True
-                if self.direction== Movement.Direction.LEFT:
-                    print("left air dive")
-                    self.x_speed=-(MAXXSPEED+3)
-                    self.has_dived=True
-    def dive_cancel(self):
-        if self.has_dived:
-            self.rect.y-=5
-            self.has_jumped_in_air=True
-            self.y_speed=MAXXSPEED
+    #def dive(self):
+        # if self.has_dived==False:
+        #     if self.is_on_ground:
+        #         if pygame.key.get_pressed()[pygame.K_d]:
+        #             print("right ground dive")
+        #             self.x_speed=MAXXSPEED+3
+        #             #self.rect.y-=10
+        #             self.has_dived=True
+        #         if pygame.key.get_pressed()[pygame.K_a]:
+        #             print("left ground dive")
+        #             self.x_speed=-(MAXXSPEED+3)
+        #             #self.rect.y-=10
+        #             self.has_dived=True
+        #     else:
+        #         if self.direction== Movement.Direction.RIGHT:
+        #             print("right air dive")
+        #             self.x_speed=MAXXSPEED+3
+        #             self.has_dived=True
+        #         if self.direction== Movement.Direction.LEFT:
+        #             print("left air dive")
+        #             self.x_speed=-(MAXXSPEED+3)
+        #             self.has_dived=True
+    #def dive_cancel(self):
+        #TODO:only reset has dived once dive canceled, cool down, change effects
+
+        # if self.has_dived:
+        #     self.rect.y-=5
+        #     self.has_jumped_in_air=True
+        #     self.y_speed=MAXXSPEED
+        #     print("dive cancel")
 
     def check5pixel(self,map):
         """checks for doublejump"""
@@ -144,11 +157,14 @@ class HatKid(GameSprite):
 
 
         keyspressedlist=pygame.key.get_pressed()
-        if pygame.key.get_pressed()[pygame.K_SPACE]:
-            self.dive_cancel
-        if keyspressedlist[pygame.K_LCTRL]:
-            self.dive()
-
+        if pygame.key.get_pressed()[pygame.K_SPACE] or pygame.key.get_pressed()[pygame.K_LCTRL]:
+            self.dive.cancel()
+        if keyspressedlist[pygame.K_LCTRL] and keyspressedlist[pygame.K_a]:
+            #self.dive.start()
+            print("L dived")
+        if keyspressedlist[pygame.K_LCTRL] and keyspressedlist[pygame.K_a]:
+            #self.dive.start()
+            print("L dived")
 
         elif keyspressedlist[pygame.K_d] and keyspressedlist[pygame.K_a]:
             self.walk.stop()
@@ -176,8 +192,8 @@ class HatKid(GameSprite):
         if keyspressedlist[pygame.K_w] or keyspressedlist[pygame.K_SPACE]:
             if self.jump.count <2 and self.canjump:
                 self.jump.start()
-        #else:
-        #    self.canjump=True
+        else:
+            self.canjump=True
         
         if(self.ispastleft()):
             if 0>=self.x_speed:
@@ -245,6 +261,6 @@ class HatKid(GameSprite):
         return self.rect.y+TILE_SIZE >= HEIGHTINTILES*TILE_SIZE
 
     def draw(self):
-        pygame.draw.rect(self.screen,"0xffffff",(self.rect.topleft[0],self.rect.topleft[1],HATKIDSIZEIDLE[0],HATKIDSIZEIDLE[1]))
+        self.hitbox=pygame.draw.rect(self.screen,(255,255,255,100),(self.rect.center[0]-self.hitbox.width/2,self.rect.bottomright[1]-self.hitbox.height,self.hitbox.width,self.hitbox.height))
         self.screen.blit(self.current_frame,self.rect)
 

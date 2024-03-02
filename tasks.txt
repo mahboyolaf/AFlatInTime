@@ -22,6 +22,8 @@ new mechanics(umbrella, dive, ledge hang, wall slide(wall jump))
 
 SMALL
 
+hitbox image disappears when it goes out of screen(might not have to fix if hitboxx works)
+
 motion class
     MORE DYNAMIC MAX SPEED
     sprites

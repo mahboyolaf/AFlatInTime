@@ -153,3 +153,59 @@ class Walk(Movement):
                 self.hatkid.current_frame=self.hatkid.idleright[0]
             elif self.hatkid.direction==Movement.Direction.LEFT:
                 self.hatkid.current_frame=self.hatkid.idleleft[0]
+
+class Dive(Movement):
+    def __init__(self,map,hatkid):
+        super().__init__(map,hatkid)
+        self.diveright=self.load("sprite/HatKid/dive",Movement.Direction.RIGHT)
+        self.diveleft=self.load("sprite/HatKid/dive",Movement.Direction.LEFT)
+        self.in_progress=False
+
+    def load(self,spritedir,direction):
+        dives=[]
+        for counter in range (1,3):
+            dive= pygame.image.load(spritedir+"/dive"+str(counter)+".png")
+            dive=pygame.transform.scale(dive,HATKIDSIZEDIVE)
+            if direction==Movement.Direction.LEFT:
+                dive=pygame.transform.flip(dive,True,False)
+            dives.append(dive)
+        return tuple(dives)
+    
+    def start(self):
+        self.in_progress=True
+        if self.has_dived==False:
+            if self.is_on_ground:
+                if pygame.key.get_pressed()[pygame.K_d]:
+                    print("right ground dive")
+                    self.x_speed=MAXXSPEED+3
+                    self.rect.y-=10
+                    self.has_dived=True
+                if pygame.key.get_pressed()[pygame.K_a]:
+                    print("left ground dive")
+                    self.x_speed=-(MAXXSPEED+3)
+                    self.rect.y-=10
+                    self.has_dived=True
+            else:
+                if self.direction== Movement.Direction.RIGHT:
+                    print("right air dive")
+                    self.x_speed=MAXXSPEED+3
+                    self.has_dived=True
+                if self.direction== Movement.Direction.LEFT:
+                    print("left air dive")
+                    self.x_speed=-(MAXXSPEED+3)
+                    self.has_dived=True
+    def cancel(self):
+        if self.hatkid.has_dived:
+            self.in_progress=False
+            print("dive cancel")
+
+    def load(self,spritedir,direction):
+        dives=[]
+        for counter in range (1,3):
+            dive= pygame.image.load(spritedir+"/dive"+str(counter)+".png")
+            dive=pygame.transform.scale(dive,HATKIDSIZEDIVE)
+            if direction==Movement.Direction.LEFT:
+                dive=pygame.transform.flip(dive,True,False)
+            dives.append(dive)
+        return tuple(dives)
+    
