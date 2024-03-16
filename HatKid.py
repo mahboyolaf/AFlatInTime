@@ -198,12 +198,13 @@ class HatKid(GameSprite):
         if(self.ispastleft()):
             if 0>=self.x_speed:
                 self.x_speed=0
-                self.rect.left=0
+                self.hitbox.left=0
 
         if(self.ispastright()):
             if 0<=self.x_speed:
                 self.x_speed=0
-                self.rect.right=SCREEN_WIDTH
+                self.hitbox.right=SCREEN_WIDTH
+                print(self.hitbox.right,self.hitbox.x)
         if(self.ispastbottom()):
             self.rect.x,self.rect.y=100,100
 
@@ -245,13 +246,15 @@ class HatKid(GameSprite):
     def ispastleft(self):
         checkahead=MAXXSPEED
         self.rect.move_ip([0,-checkahead])
-        check=self.rect.x <= 0
+        #check=self.rect.x <= 0
+        check=self.hitbox.x <= 0
         self.rect.move_ip([0,checkahead])
         return check
 
     def ispastright(self):
         self.rect.move_ip([0,self.x_speed])
-        check=self.rect.x+TILE_SIZE >= WIDTHINTILES*TILE_SIZE
+        #check=self.rect.x+TILE_SIZE >= WIDTHINTILES*TILE_SIZE
+        check=self.hitbox.x+TILE_SIZE >= WIDTHINTILES*TILE_SIZE
         self.rect.move_ip([0,-self.x_speed])
         return check
 
