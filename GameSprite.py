@@ -1,12 +1,13 @@
 import pygame
 class GameSprite(pygame.sprite.Sprite):
-    def __init__(self,x,y,filename=None,screen=None,size=None):
+    def __init__(self,x,y,filename=None,screen=None,size=(32,64)):
 
         pygame.sprite.Sprite.__init__(self)
         self.screen=screen
         self.x=x
         self.y=y
         self.size=size
+        self.rect = pygame.Rect(self.x, self.y, self.size[0], self.size[1])
 
         if filename != None:
             self.set_image(filename)

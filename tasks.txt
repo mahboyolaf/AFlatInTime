@@ -6,6 +6,7 @@ pon system + shop(badges)
 badges
 health
 time pieces
+delta time
 new sprites
 HAIR+cape physics
 make portable exe
@@ -22,7 +23,7 @@ new mechanics(umbrella, dive, ledge hang, wall slide(wall jump))
 
 SMALL
 
-hitbox image disappears when it goes out of screen(might not have to fix if hitboxx works)
+fix tile interaction
 
 motion class
     MORE DYNAMIC MAX SPEED

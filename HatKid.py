@@ -5,19 +5,19 @@ from constants import *
 from GameSprite import *
 
 class Hitbox(GameSprite):
-    def __init__(self,x,y,screen=None,size=None,width=64,height=64):
-        super().__init__(x,y,None,screen,size)
-        self.width=width
-        self.height=height
-        pygame.draw.rect(screen,(100,100,100),(x,y,width,height))
+    colour =(255,255,255,100)
+    def __init__(self,x,y,screen=None):
+        super().__init__(x,y,None,screen)
+        #pygame.draw.rect(screen,(100,100,100),(x,y))
+    def draw(self):
+        pygame.draw.rect(self.screen, Hitbox.colour,self.rect)
 
 class HatKid(GameSprite):
     def __init__(self,x,y,screen,map):
         hatkid_filename = "sprite/HatKid/walk/walk1.png"
         size = (TILE_SIZE,TILE_SIZE)
         super().__init__(x,y,hatkid_filename,screen,size)
-        self.hitbox=Hitbox(x,y,screen,size,width=32,height=64)
-
+        self.hitbox=Hitbox(x,y,screen)
         self.walks=[]
         self.walk=Walk(map,self)
         self.jump=Jump(map,self)
@@ -110,7 +110,9 @@ class HatKid(GameSprite):
         return hitlist
 
     def update(self,map1):
-        #print(self.x_speed)
+        #update hitbox pos
+        self.hitbox.rect.center=self.rect.center
+
         #gravity
         if self.y_speed <= MAXYSPEED:
             self.y_speed +=0.2
@@ -198,13 +200,13 @@ class HatKid(GameSprite):
         if(self.ispastleft()):
             if 0>=self.x_speed:
                 self.x_speed=0
-                self.hitbox.left=0
+                #self.hitbox.left=0
 
         if(self.ispastright()):
             if 0<=self.x_speed:
                 self.x_speed=0
-                self.hitbox.right=SCREEN_WIDTH
-                print(self.hitbox.right,self.hitbox.x)
+                #self.hitbox.rect.right=SCREEN_WIDTH
+                #print(self.hitbox.right,self.hitbox.x)
         if(self.ispastbottom()):
             self.rect.x,self.rect.y=100,100
 
@@ -247,14 +249,14 @@ class HatKid(GameSprite):
         checkahead=MAXXSPEED
         self.rect.move_ip([0,-checkahead])
         #check=self.rect.x <= 0
-        check=self.hitbox.x <= 0
+        check=self.hitbox.rect.left <= 0
         self.rect.move_ip([0,checkahead])
         return check
 
     def ispastright(self):
         self.rect.move_ip([0,self.x_speed])
         #check=self.rect.x+TILE_SIZE >= WIDTHINTILES*TILE_SIZE
-        check=self.hitbox.x+TILE_SIZE >= WIDTHINTILES*TILE_SIZE
+        check=self.hitbox.rect.right >= WIDTHINTILES*TILE_SIZE
         self.rect.move_ip([0,-self.x_speed])
         return check
 
@@ -264,6 +266,7 @@ class HatKid(GameSprite):
         return self.rect.y+TILE_SIZE >= HEIGHTINTILES*TILE_SIZE
 
     def draw(self):
-        self.hitbox=pygame.draw.rect(self.screen,(255,255,255,100),(self.rect.center[0]-self.hitbox.width/2,self.rect.bottomright[1]-self.hitbox.height,self.hitbox.width,self.hitbox.height))
+        self.hitbox.draw()
+        #self.hitbox=pygame.draw.rect(self.screen,(255,255,255,100),(self.rect.center[0]-self.hitbox.width/2,self.rect.bottomright[1]-self.hitbox.height,self.hitbox.width,self.hitbox.height))
         self.screen.blit(self.current_frame,self.rect)
 
