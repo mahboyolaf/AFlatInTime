@@ -144,12 +144,12 @@ class HatKid(GameSprite):
         # and pygame.key.get_pressed()[pygame.K_a]
         if (tilesleft:= self.tilesleft(map1)) and self.x_speed <= 0:
             self.x_speed=0
-            self.rect.left=tilesleft[0].rect.right
+            self.hitbox.rect.left=tilesleft[0].rect.right
 
             
         if (tilesright:= self.tilesright(map1)) and self.x_speed >= 0:
             self.x_speed=0
-            self.rect.right=tilesright[0].rect.left
+            self.hitbox.rect.right=tilesright[0].rect.left
         #walking sprite
         
         #set up display frame
@@ -221,28 +221,29 @@ class HatKid(GameSprite):
     def tilesunder(self,map):
         """return a list of tiles below the kid"""
         checkahead=MAXYSPEED
-        self.rect.move_ip([0,checkahead])
-        hitlist=pygame.sprite.spritecollide(self,map.tiles,False)
-        self.rect.move_ip([0,-checkahead])
+        self.hitbox.rect.move_ip([0,checkahead])
+        hitlist=pygame.sprite.spritecollide(self.hitbox,map.tiles,False)
+        self.hitbox.rect.move_ip([0,-checkahead])
         return hitlist
     def tilesabove(self,map):
         """return a list of tiles above the kid"""
         #self.rect.move_ip([0,-(self.y_speed+1)])
         self.rect.move_ip([0,-1])
-        hitlist=pygame.sprite.spritecollide(self,map.tiles,False)
+        hitlist=pygame.sprite.spritecollide(self.hitbox,map.tiles,False)
         #self.rect.move_ip([0,self.y_speed+1])
         self.rect.move_ip([0,1])
         return hitlist    
     def tilesleft(self,map):
+        print (self.hitbox.rect.left)
         """return a list of tiles above the kid"""
-        self.rect.move_ip([-3,0])
-        hitlist=pygame.sprite.spritecollide(self,map.tiles,False)
-        self.rect.move_ip([3,0])
+        self.hitbox.rect.move_ip([-MAXXSPEED,0])
+        hitlist=pygame.sprite.spritecollide(self.hitbox,map.tiles,False)
+        self.hitbox.rect.move_ip([MAXXSPEED,0])
         return hitlist 
     def tilesright(self,map):
-        self.rect.move_ip([3,0])
-        hitlist=pygame.sprite.spritecollide(self,map.tiles,False)
-        self.rect.move_ip([-3,0])
+        self.hitbox.rect.move_ip([3,0])
+        hitlist=pygame.sprite.spritecollide(self.hitbox,map.tiles,False)
+        self.hitbox.rect.move_ip([-3,0])
         return hitlist   
     
     def ispastleft(self):
