@@ -23,7 +23,7 @@ new mechanics(umbrella, dive, ledge hang, wall slide(wall jump))
 
 SMALL
 
-fix tile interaction
+fix top hitbox interaction with tile (must be unable to jump if tile is above you)
 
 motion class
     MORE DYNAMIC MAX SPEED
