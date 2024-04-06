@@ -234,7 +234,6 @@ class HatKid(GameSprite):
         self.rect.move_ip([0,1])
         return hitlist    
     def tilesleft(self,map):
-        print (self.hitbox.rect.left)
         """return a list of tiles above the kid"""
         self.hitbox.rect.move_ip([-MAXXSPEED,0])
         hitlist=pygame.sprite.spritecollide(self.hitbox,map.tiles,False)
