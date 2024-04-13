@@ -133,13 +133,16 @@ class HatKid(GameSprite):
             if self.y_speed >= 0:
                 #print("not space")
                 self.y_speed=0
+                self.hitbox.rect.bottom=tilesunder[0].rect.top
                 self.rect.bottom=tilesunder[0].rect.top
         else:
             self.is_on_ground= False
 
         if (tilesabove:= self.tilesabove(map1)) and self.y_speed <= 0:
             self.y_speed=0
+            self.hitbox.rect.top=tilesabove[0].rect.bottom
             self.rect.top=tilesabove[0].rect.bottom
+            self.canjump=False
 
         # and pygame.key.get_pressed()[pygame.K_a]
         if (tilesleft:= self.tilesleft(map1)) and self.x_speed <= 0:
@@ -216,7 +219,8 @@ class HatKid(GameSprite):
         self.rect.x+=self.x_speed
         self.rect.y+=self.y_speed
 
-
+        self.hitbox.rect.x+=self.x_speed
+        self.hitbox.rect.y+=self.y_speed
 
     def tilesunder(self,map):
         """return a list of tiles below the kid"""
@@ -228,10 +232,10 @@ class HatKid(GameSprite):
     def tilesabove(self,map):
         """return a list of tiles above the kid"""
         #self.rect.move_ip([0,-(self.y_speed+1)])
-        self.rect.move_ip([0,-1])
+        self.hitbox.rect.move_ip([0,-1])
         hitlist=pygame.sprite.spritecollide(self.hitbox,map.tiles,False)
         #self.rect.move_ip([0,self.y_speed+1])
-        self.rect.move_ip([0,1])
+        self.hitbox.rect.move_ip([0,1])
         return hitlist    
     def tilesleft(self,map):
         """return a list of tiles above the kid"""
@@ -267,6 +271,7 @@ class HatKid(GameSprite):
 
     def draw(self):
         self.hitbox.draw()
+        #pygame.draw.rect(self.screen, Hitbox.colour,self.rect).
         #self.hitbox=pygame.draw.rect(self.screen,(255,255,255,100),(self.rect.center[0]-self.hitbox.width/2,self.rect.bottomright[1]-self.hitbox.height,self.hitbox.width,self.hitbox.height))
         self.screen.blit(self.current_frame,self.rect)
 

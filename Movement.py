@@ -127,6 +127,7 @@ class Walk(Movement):
         if abs(self.hatkid.x_speed)<self.MAXXSPEED:
             #accelerate
             self.hatkid.x_speed=self.hatkid.x_speed+(self.X_ACCELERATION*direction_multiplier)
+        
         else:
             #keep at max speed
             self.hatkid.x_speed= (self.MAXXSPEED*direction_multiplier)
