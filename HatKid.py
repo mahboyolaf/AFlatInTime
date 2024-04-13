@@ -162,14 +162,12 @@ class HatKid(GameSprite):
 
 
         keyspressedlist=pygame.key.get_pressed()
-        if pygame.key.get_pressed()[pygame.K_SPACE] or pygame.key.get_pressed()[pygame.K_LCTRL]:
-            self.dive.cancel()
+        # if pygame.key.get_pressed()[pygame.K_SPACE] or pygame.key.get_pressed()[pygame.K_LCTRL]:
+        #     self.dive.cancel()
         if keyspressedlist[pygame.K_LCTRL] and keyspressedlist[pygame.K_a]:
-            #self.dive.start()
-            print("L dived")
-        if keyspressedlist[pygame.K_LCTRL] and keyspressedlist[pygame.K_a]:
-            #self.dive.start()
-            print("L dived")
+            self.dive.start()
+            #print("L dived")
+
 
         elif keyspressedlist[pygame.K_d] and keyspressedlist[pygame.K_a]:
             self.walk.stop()
@@ -195,10 +193,13 @@ class HatKid(GameSprite):
             self.walk.stop()
 
         if keyspressedlist[pygame.K_w] or keyspressedlist[pygame.K_SPACE]:
+            self.dive.cancel()
             if self.jump.count <2 and self.canjump:
                 self.jump.start()
+            
         else:
             self.canjump=True
+        
         
         if(self.ispastleft()):
             if 0>=self.x_speed:

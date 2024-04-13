@@ -161,7 +161,7 @@ class Dive(Movement):
         self.diveright=self.load("sprite/HatKid/dive",Movement.Direction.RIGHT)
         self.diveleft=self.load("sprite/HatKid/dive",Movement.Direction.LEFT)
         self.in_progress=False
-
+        self.has_dived=False
     def load(self,spritedir,direction):
         dives=[]
         for counter in range (1,3):
@@ -183,8 +183,8 @@ class Dive(Movement):
                     self.has_dived=True
                 if pygame.key.get_pressed()[pygame.K_a]:
                     print("left ground dive")
-                    self.x_speed=-(MAXXSPEED+3)
-                    self.rect.y-=10
+                    self.hatkid.x_speed=-(MAXXSPEED+3)
+                    self.hatkid.rect.y-=10
                     self.has_dived=True
             else:
                 if self.direction== Movement.Direction.RIGHT:
@@ -196,9 +196,10 @@ class Dive(Movement):
                     self.x_speed=-(MAXXSPEED+3)
                     self.has_dived=True
     def cancel(self):
-        if self.hatkid.has_dived:
+        if self.has_dived:
             self.in_progress=False
             print("dive cancel")
+        self.has_dived= False
 
     def load(self,spritedir,direction):
         dives=[]
