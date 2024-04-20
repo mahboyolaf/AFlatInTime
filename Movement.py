@@ -1,5 +1,6 @@
 import pygame
 import random
+import time
 from constants import *
 from GameSprite import *
 # sprites
@@ -162,6 +163,7 @@ class Dive(Movement):
         self.diveleft=self.load("sprite/HatKid/dive",Movement.Direction.LEFT)
         self.in_progress=False
         self.has_dived=False
+        self.timestart=time.time()  
     def load(self,spritedir,direction):
         dives=[]
         for counter in range (1,3):
@@ -175,11 +177,12 @@ class Dive(Movement):
     def start(self):
         self.in_progress=True
         if self.has_dived==False:
-            if self.is_on_ground:
+            self.timestart=time.time()            
+            if self.hatkid.is_on_ground:
                 if pygame.key.get_pressed()[pygame.K_d]:
                     print("right ground dive")
                     self.x_speed=MAXXSPEED+3
-                    self.rect.y-=10
+                    self.hatkid.rect.y-=10
                     self.has_dived=True
                 if pygame.key.get_pressed()[pygame.K_a]:
                     print("left ground dive")
@@ -187,18 +190,19 @@ class Dive(Movement):
                     self.hatkid.rect.y-=10
                     self.has_dived=True
             else:
-                if self.direction== Movement.Direction.RIGHT:
+                if self.hatkid.direction== Movement.Direction.RIGHT:
                     print("right air dive")
                     self.x_speed=MAXXSPEED+3
                     self.has_dived=True
-                if self.direction== Movement.Direction.LEFT:
+                if self.hatkid.direction== Movement.Direction.LEFT:
                     print("left air dive")
                     self.x_speed=-(MAXXSPEED+3)
                     self.has_dived=True
     def cancel(self):
-        if self.has_dived:
+        timeelapsed=(time.time())-(self.timestart)
+        if self.has_dived and (timeelapsed>100000):
             self.in_progress=False
-            print("dive cancel")
+            print("dive cancel",timeelapsed)
         self.has_dived= False
 
     def load(self,spritedir,direction):
