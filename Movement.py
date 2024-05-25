@@ -163,6 +163,8 @@ class Dive(Movement):
         self.diveleft=self.load("sprite/HatKid/dive",Movement.Direction.LEFT)
         self.in_progress=False
         self.has_dived=False
+        self.divestatus=False
+        self.ctrlpaststatus=False
         self.timestart=time.time()  
     def load(self,spritedir,direction):
         dives=[]

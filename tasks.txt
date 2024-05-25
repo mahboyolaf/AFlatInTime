@@ -1,4 +1,11 @@
-BIG
+CURRENT:
+self.dive.start() (fix dive start method works to fit with logic)
+
+
+
+
+
+BIG:
 main title screen
 make levels
 enemys
@@ -21,7 +28,7 @@ alt characters?
 
 new mechanics(umbrella, dive, ledge hang, wall slide(wall jump))
 
-SMALL
+SMALL:
 
 motion class
     MORE DYNAMIC MAX SPEED
@@ -30,7 +37,7 @@ motion class
     direction facing
     max speeds
     key inputs
-    conditions to start and stop
+    conditions to start and stop-
     flags (states)
     acceleration
     sound effects

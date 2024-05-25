@@ -162,15 +162,30 @@ class HatKid(GameSprite):
 
 
         keyspressedlist=pygame.key.get_pressed()
-        if pygame.key.get_pressed()[pygame.K_SPACE] or pygame.key.get_pressed()[pygame.K_LCTRL]:
-            self.dive.cancel()
-            print ("space or left control")
-        if keyspressedlist[pygame.K_LCTRL] and keyspressedlist[pygame.K_a]:
-            self.dive.start()
-            #print("L dived")
+
+        if self.dive.divestatus:
+            if not self.dive.ctrlpaststatus and pygame.key.get_pressed()[pygame.K_LCTRL]:
+                self.dive.divestatus= False
+                self.dive.cancel()
+                print ("start dive cancel")
+                pass
+            else:
+                self.dive.start()
+                print ("continue dive")
+                pass
+        else:
+            if not self.dive.ctrlpaststatus and pygame.key.get_pressed()[pygame.K_LCTRL]:
+                self.dive.divestatus= True
+                self.dive.start()
+                print ("start dive")
+                pass
+            elif not self.dive.ctrlpaststatus and not pygame.key.get_pressed()[pygame.K_LCTRL]:
+                print ("no input")
+                pass
+        self.dive.ctrlpaststatus=pygame.key.get_pressed()[pygame.K_LCTRL]
 
 
-        elif keyspressedlist[pygame.K_d] and keyspressedlist[pygame.K_a]:
+        if keyspressedlist[pygame.K_d] and keyspressedlist[pygame.K_a]:
             self.walk.stop()
         elif keyspressedlist[pygame.K_d]:
             if self.direction == Movement.Direction.LEFT:
@@ -195,7 +210,6 @@ class HatKid(GameSprite):
 
         if keyspressedlist[pygame.K_w] or keyspressedlist[pygame.K_SPACE]:
             self.dive.cancel()
-            print ("w or space")
             if self.jump.count <2 and self.canjump:
                 self.jump.start()
             
