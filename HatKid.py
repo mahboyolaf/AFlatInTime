@@ -177,9 +177,11 @@ class HatKid(GameSprite):
             if not self.dive.ctrlpaststatus and pygame.key.get_pressed()[pygame.K_LCTRL]:
                 self.dive.divestatus= True
                 self.dive.start()
+                self.dive.load("sprite/HatKid/dive",Movement.Direction.RIGHT)
                 print ("start dive")
                 pass
             elif not self.dive.ctrlpaststatus and not pygame.key.get_pressed()[pygame.K_LCTRL]:
+                self.dive.load("sprite/HatKid/dive",Movement.Direction.RIGHT)
                 print ("no input")
                 pass
         self.dive.ctrlpaststatus=pygame.key.get_pressed()[pygame.K_LCTRL]

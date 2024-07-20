@@ -161,6 +161,7 @@ class Dive(Movement):
         super().__init__(map,hatkid)
         self.diveright=self.load("sprite/HatKid/dive",Movement.Direction.RIGHT)
         self.diveleft=self.load("sprite/HatKid/dive",Movement.Direction.LEFT)
+        self.sprites_right=self.load("sprite/HatKid/dive",Movement.Direction.RIGHT)
         self.in_progress=False
         self.has_dived=False
         self.divestatus=False
@@ -183,6 +184,7 @@ class Dive(Movement):
             if self.hatkid.is_on_ground:
                 if pygame.key.get_pressed()[pygame.K_d]:
                     print("right ground dive")
+                    self.hatkid.current_frame=self.diveright
                     self.x_speed=MAXXSPEED+3
                     self.hatkid.rect.y-=10
                     self.has_dived=True
@@ -193,6 +195,7 @@ class Dive(Movement):
                     self.has_dived=True
             else:
                 if self.hatkid.direction== Movement.Direction.RIGHT:
+                    self.hatkid.current_frame=self.diveright
                     print("right air dive")
                     self.x_speed=MAXXSPEED+3
                     self.has_dived=True
@@ -209,6 +212,7 @@ class Dive(Movement):
 
     def load(self,spritedir,direction):
         dives=[]
+        print(spritedir)
         for counter in range (1,3):
             dive= pygame.image.load(spritedir+"/dive"+str(counter)+".png")
             dive=pygame.transform.scale(dive,HATKIDSIZEDIVE)
