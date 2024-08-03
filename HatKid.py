@@ -172,12 +172,14 @@ class HatKid(GameSprite):
             else:
                 self.dive.start()
                 print ("continue dive")
+                self.current_frame=self.diveright[0]
                 pass
         else:
             if not self.dive.ctrlpaststatus and pygame.key.get_pressed()[pygame.K_LCTRL]:
                 self.dive.divestatus= True
                 self.dive.start()
                 self.dive.load("sprite/HatKid/dive",Movement.Direction.RIGHT)
+                self.current_frame=self.diveright[0]
                 print ("start dive")
                 pass
             elif not self.dive.ctrlpaststatus and not pygame.key.get_pressed()[pygame.K_LCTRL]:
@@ -189,7 +191,7 @@ class HatKid(GameSprite):
 
         if keyspressedlist[pygame.K_d] and keyspressedlist[pygame.K_a]:
             self.walk.stop()
-        elif keyspressedlist[pygame.K_d]:
+        elif keyspressedlist[pygame.K_d] and not self.dive.divestatus:
             if self.direction == Movement.Direction.LEFT:
                 self.walk.stop()
             elif self.x_speed <-0.1:
@@ -198,7 +200,7 @@ class HatKid(GameSprite):
                 self.jumpdirection=True
             self.walk.set_direction(Movement.Direction.RIGHT)
             self.walk.start()
-        elif keyspressedlist[pygame.K_a]:
+        elif keyspressedlist[pygame.K_a] and not self.dive.divestatus:
             if self.direction == Movement.Direction.RIGHT:
                 self.walk.stop()
             elif self.x_speed >0.1:
