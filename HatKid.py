@@ -124,6 +124,8 @@ class HatKid(GameSprite):
     def is_moving_upwards(self):
         return self.y_speed <= 0
 
+    def set_can_jump(self,has_tiles_above): 
+        self.canjump=self.canjump and not has_tiles_above #allowed jump when no tiles above
 
     def update(self,map1):
         #update hitbox pos
@@ -131,11 +133,7 @@ class HatKid(GameSprite):
         tilesunder=self.tilesunder(map1)
         tilesabove= self.tilesabove(map1)
         self.set_y_speed(tilesunder,tilesabove)
-
-        #checks if theres a tile
-        if self.tilesabove(map1):
-            #print ("cant double jump")
-            self.canjump=False
+        # self.set_can_jump(tilesabove)
 
         #if on ground does this
         if tilesunder:
@@ -255,14 +253,14 @@ class HatKid(GameSprite):
         self.hitbox.rect.y+=self.y_speed
 
     def tilesunder(self,map):
-        """return a list of tiles below the kid"""
+        """return a list of tiles below hat kid"""
         checkahead=MAXYSPEED
         self.hitbox.rect.move_ip([0,checkahead])
         hitlist=pygame.sprite.spritecollide(self.hitbox,map.tiles,False)
         self.hitbox.rect.move_ip([0,-checkahead])
         return hitlist
     def tilesabove(self,map):
-        """return a list of tiles above the kid"""
+        """return a list of tiles above hat kid"""
         #self.rect.move_ip([0,-(self.y_speed+1)])
         self.hitbox.rect.move_ip([0,-1])
         hitlist=pygame.sprite.spritecollide(self.hitbox,map.tiles,False)
@@ -270,7 +268,7 @@ class HatKid(GameSprite):
         self.hitbox.rect.move_ip([0,1])
         return hitlist    
     def tilesleft(self,map):
-        """return a list of tiles above the kid"""
+        """return a list of tiles above hat kid"""
         self.hitbox.rect.move_ip([-MAXXSPEED,0])
         hitlist=pygame.sprite.spritecollide(self.hitbox,map.tiles,False)
         self.hitbox.rect.move_ip([MAXXSPEED,0])
