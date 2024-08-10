@@ -125,7 +125,7 @@ class HatKid(GameSprite):
         return self.y_speed <= 0
 
     def set_can_jump(self,has_tiles_above): 
-        self.canjump=self.canjump and not has_tiles_above #allowed jump when no tiles above
+        pass
 
     def update(self,map1):
         #update hitbox pos
