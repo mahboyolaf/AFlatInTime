@@ -110,6 +110,7 @@ class HatKid(GameSprite):
         return hitlist
 
     def set_y_speed(self):
+        #gravity
         if self.y_speed <= MAXYSPEED:
             self.y_speed +=0.2
 
@@ -119,9 +120,6 @@ class HatKid(GameSprite):
         #update hitbox pos
         self.hitbox.rect.center=self.rect.center
         self.set_y_speed()
-        #gravity
-        #if self.y_speed <= MAXYSPEED:
-        #    self.y_speed +=0.2
 
         #checks if theres a tile
         if self.tilesabove(map1):
