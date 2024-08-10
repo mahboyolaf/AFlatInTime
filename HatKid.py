@@ -109,17 +109,20 @@ class HatKid(GameSprite):
         self.rect.move_ip([0,MAXYSPEED])
         return hitlist
 
-    def set_y_speed(self):
+    def set_y_speed(self,has_tiles_under):
         #gravity
         if self.y_speed <= MAXYSPEED:
             self.y_speed +=0.2
+        if has_tiles_under and self.y_speed >= 0:
+            self.y_speed=0
 
 
 
     def update(self,map1):
         #update hitbox pos
         self.hitbox.rect.center=self.rect.center
-        self.set_y_speed()
+        tilesunder=self.tilesunder(map1)
+        self.set_y_speed(tilesunder)
 
         #checks if theres a tile
         if self.tilesabove(map1):
@@ -127,16 +130,13 @@ class HatKid(GameSprite):
             self.canjump=False
 
         #if on ground does this
-        if tilesunder:= self.tilesunder(map1):
-            #print("tile under")
+        if tilesunder:
             self.jumpdirection=False
             self.jump.count=0
             self.is_on_ground= True
             self.has_jumped_in_air= False
             self.has_dived=False
             if self.y_speed >= 0:
-                #print("not space")
-                self.y_speed=0
                 self.hitbox.rect.bottom=tilesunder[0].rect.top
                 self.rect.bottom=tilesunder[0].rect.top
         else:
