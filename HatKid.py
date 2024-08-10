@@ -113,11 +113,16 @@ class HatKid(GameSprite):
         #gravity
         if self.y_speed <= MAXYSPEED:
             self.y_speed +=0.2
-        if has_tiles_under and self.y_speed >= 0:
+        if has_tiles_under and self.is_moving_downward():
             self.y_speed=0
-        if has_tiles_above and self.y_speed <= 0:
+        if has_tiles_above and self.is_moving_upwards():
             self.y_speed=0
-
+    
+    def is_moving_downward(self):
+        return self.y_speed >= 0
+    
+    def is_moving_upwards(self):
+        return self.y_speed <= 0
 
 
     def update(self,map1):
@@ -139,13 +144,13 @@ class HatKid(GameSprite):
             self.is_on_ground= True
             self.has_jumped_in_air= False
             self.has_dived=False
-            if self.y_speed >= 0:
+            if self.is_moving_downward():
                 self.hitbox.rect.bottom=tilesunder[0].rect.top
                 self.rect.bottom=tilesunder[0].rect.top
         else:
             self.is_on_ground= False
 
-        if tilesabove and self.y_speed <= 0:
+        if tilesabove and self.is_moving_upwards():
             self.hitbox.rect.top=tilesabove[0].rect.bottom
             self.rect.top=tilesabove[0].rect.bottom
             self.canjump=False
