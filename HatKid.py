@@ -123,6 +123,11 @@ class HatKid(GameSprite):
     
     def is_moving_upwards(self):
         return self.y_speed <= 0
+    
+    def is_moving_right(self):
+        return self.x_speed >0.1
+    def is_moving_left(self):
+        return self.x_speed <-0.1
 
     def set_can_jump(self,has_tiles_above):
         if has_tiles_above and self.is_moving_upwards():
@@ -133,17 +138,20 @@ class HatKid(GameSprite):
     def is_press_jump_key():
         keyspressedlist=pygame.key.get_pressed()        
         return keyspressedlist[pygame.K_w] or keyspressedlist[pygame.K_SPACE]
-
+    def has_jumpedtwice(self):
+        return self.jump.count == 2
 
     def set_jumpdirection(self,has_tiles_under):
         keyspressedlist=pygame.key.get_pressed()
         if has_tiles_under:
             self.jumpdirection=False
-        if keyspressedlist[pygame.K_d] and not self.dive.divestatus and not self.direction == Movement.Direction.LEFT and not self.x_speed <-0.1 and self.jump.count == 2 and self.jumpdirection == False:
+        if keyspressedlist[pygame.K_d] and not self.dive.divestatus and not self.direction == Movement.Direction.LEFT\
+              and not self.is_moving_left() and self.has_jumpedtwice() and not self.jumpdirection:
             self.jumpdirection=True
-        elif keyspressedlist[pygame.K_a] and not self.dive.divestatus and not self.direction == Movement.Direction.RIGHT and not self.x_speed >0.1 and self.jump.count == 2 and self.jumpdirection == False:
+        elif keyspressedlist[pygame.K_a] and not self.dive.divestatus and not self.direction == Movement.Direction.RIGHT\
+              and not self.is_moving_right() and self.has_jumpedtwice() and not self.jumpdirection:
             self.jumpdirection=True
-
+    
 
 
 
