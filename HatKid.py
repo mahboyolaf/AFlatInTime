@@ -124,8 +124,15 @@ class HatKid(GameSprite):
     def is_moving_upwards(self):
         return self.y_speed <= 0
 
-    def set_can_jump(self,has_tiles_above): 
-        pass
+    def set_can_jump(self,has_tiles_above):
+        if has_tiles_above and self.is_moving_upwards():
+            self.canjump=False
+        if not HatKid.is_press_jump_key():
+            self.canjump=True
+
+    def is_press_jump_key():
+        keyspressedlist=pygame.key.get_pressed()        
+        return keyspressedlist[pygame.K_w] or keyspressedlist[pygame.K_SPACE]
 
     def update(self,map1):
         #update hitbox pos
@@ -133,7 +140,14 @@ class HatKid(GameSprite):
         tilesunder=self.tilesunder(map1)
         tilesabove= self.tilesabove(map1)
         self.set_y_speed(tilesunder,tilesabove)
+        self.set_can_jump(tilesabove)
         # self.set_can_jump(tilesabove)
+
+
+
+
+
+        
 
         #if on ground does this
         if tilesunder:
@@ -151,7 +165,6 @@ class HatKid(GameSprite):
         if tilesabove and self.is_moving_upwards():
             self.hitbox.rect.top=tilesabove[0].rect.bottom
             self.rect.top=tilesabove[0].rect.bottom
-            self.canjump=False
 
         # and pygame.key.get_pressed()[pygame.K_a]
         if (tilesleft:= self.tilesleft(map1)) and self.x_speed <= 0:
@@ -226,8 +239,6 @@ class HatKid(GameSprite):
             if self.jump.count <2 and self.canjump:
                 self.jump.start()
             
-        else:
-            self.canjump=True
         
         
         if(self.ispastleft()):
