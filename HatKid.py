@@ -134,6 +134,19 @@ class HatKid(GameSprite):
         keyspressedlist=pygame.key.get_pressed()        
         return keyspressedlist[pygame.K_w] or keyspressedlist[pygame.K_SPACE]
 
+
+    def set_jumpdirection(self,has_tiles_under):
+        keyspressedlist=pygame.key.get_pressed()
+        if has_tiles_under:
+            self.jumpdirection=False
+        if keyspressedlist[pygame.K_d] and not self.dive.divestatus and not self.direction == Movement.Direction.LEFT and not self.x_speed <-0.1 and self.jump.count == 2 and self.jumpdirection == False:
+            self.jumpdirection=True
+        elif keyspressedlist[pygame.K_a] and not self.dive.divestatus and not self.direction == Movement.Direction.RIGHT and not self.x_speed >0.1 and self.jump.count == 2 and self.jumpdirection == False:
+            self.jumpdirection=True
+
+
+
+
     def update(self,map1):
         #update hitbox pos
         self.hitbox.rect.center=self.rect.center
@@ -141,9 +154,8 @@ class HatKid(GameSprite):
         tilesabove= self.tilesabove(map1)
         self.set_y_speed(tilesunder,tilesabove)
         self.set_can_jump(tilesabove)
+        self.set_jumpdirection(tilesunder)
         # self.set_can_jump(tilesabove)
-
-
 
 
 
@@ -151,7 +163,6 @@ class HatKid(GameSprite):
 
         #if on ground does this
         if tilesunder:
-            self.jumpdirection=False
             self.jump.count=0
             self.is_on_ground= True
             self.has_jumped_in_air= False
@@ -218,8 +229,6 @@ class HatKid(GameSprite):
                 self.walk.stop()
             elif self.x_speed <-0.1:
                 self.walk.stop()
-            elif self.jump.count == 2 and self.jumpdirection == False:
-                self.jumpdirection=True
             self.walk.set_direction(Movement.Direction.RIGHT)
             self.walk.start()
         elif keyspressedlist[pygame.K_a] and not self.dive.divestatus:
@@ -227,8 +236,6 @@ class HatKid(GameSprite):
                 self.walk.stop()
             elif self.x_speed >0.1:
                 self.walk.stop()  
-            elif self.jump.count == 2 and self.jumpdirection == False:
-                self.jumpdirection=True
             self.walk.set_direction(Movement.Direction.LEFT)
             self.walk.start()
         else:
