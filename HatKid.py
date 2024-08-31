@@ -190,6 +190,12 @@ class HatKid(GameSprite):
             self.x_speed=0
             self.hitbox.rect.left=tilesleft[0].rect.right
 
+    def control_right_collision(self,tilesright):
+        has_tiles_right=len(tilesright)>0
+        if has_tiles_right and (self.is_moving_right() or self.is_stopped_x()):
+            self.x_speed=0
+            self.hitbox.rect.right=tilesright[0].rect.left
+
     def is_stopped_x(self):
         return self.x_speed==0
 
@@ -218,23 +224,8 @@ class HatKid(GameSprite):
         tilesright= self.tilesright(map1)
         tilesleft=  self.tilesleft(map1)
         self.control_left_collision(tilesleft)
-
-
-
-
-
-
-            
-        if (tilesright:= self.tilesright(map1)) and self.x_speed >= 0:
-            self.x_speed=0
-            self.hitbox.rect.right=tilesright[0].rect.left
-        #walking sprite
+        self.control_right_collision(tilesright)
         
-        #set up display frame
-        
-
-    
-
 
         keyspressedlist=pygame.key.get_pressed()
 
