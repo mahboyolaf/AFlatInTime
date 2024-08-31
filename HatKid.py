@@ -172,6 +172,15 @@ class HatKid(GameSprite):
                 self.hitbox.rect.bottom=tilesunder[0].rect.top
                 self.rect.bottom=tilesunder[0].rect.top
 
+    def control_ceiling_collision(self,tilesabove):
+        has_tiles_above=len(tilesabove)>0
+        if has_tiles_above and self.is_moving_upwards():
+            self.hitbox.rect.top=tilesabove[0].rect.bottom
+            self.rect.top=tilesabove[0].rect.bottom
+
+
+
+
     def update(self,map1):
         #update hitbox pos
         self.hitbox.rect.center=self.rect.center
@@ -187,13 +196,9 @@ class HatKid(GameSprite):
         self.set_isonground(has_tiles_under)
         self.set_has_jumped_in_air(has_tiles_under)
         self.set_hasdived(has_tiles_under)
-        
+
         self.control_ground_collision(tilesunder)
-
-
-        if tilesabove and self.is_moving_upwards():
-            self.hitbox.rect.top=tilesabove[0].rect.bottom
-            self.rect.top=tilesabove[0].rect.bottom
+        self.control_ceiling_collision(tilesabove)
 
         # and pygame.key.get_pressed()[pygame.K_a]
         if (tilesleft:= self.tilesleft(map1)) and self.x_speed <= 0:
