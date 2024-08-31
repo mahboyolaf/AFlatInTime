@@ -124,10 +124,15 @@ class HatKid(GameSprite):
     def is_moving_upwards(self):
         return self.y_speed <= 0
     
-    def is_moving_right(self):
+    def is_moving_right_fast(self):
         return self.x_speed >0.1
-    def is_moving_left(self):
+    def is_moving_left_fast(self):
         return self.x_speed <-0.1
+    
+    def is_moving_right(self):
+        return self.x_speed >0
+    def is_moving_left(self):
+        return self.x_speed <0
 
     def set_can_jump(self,has_tiles_above):
         if has_tiles_above and self.is_moving_upwards():
@@ -146,10 +151,10 @@ class HatKid(GameSprite):
         if has_tiles_under:
             self.jumpdirection=False
         if keyspressedlist[pygame.K_d] and not self.dive.divestatus and not self.direction == Movement.Direction.LEFT\
-              and not self.is_moving_left() and self.has_jumpedtwice() and not self.jumpdirection:
+              and not self.is_moving_left_fast() and self.has_jumpedtwice() and not self.jumpdirection:
             self.jumpdirection=True
         elif keyspressedlist[pygame.K_a] and not self.dive.divestatus and not self.direction == Movement.Direction.RIGHT\
-              and not self.is_moving_right() and self.has_jumpedtwice() and not self.jumpdirection:
+              and not self.is_moving_right_fast() and self.has_jumpedtwice() and not self.jumpdirection:
             self.jumpdirection=True
     
     def set_jumpcount(self,has_tiles_under):
@@ -179,13 +184,23 @@ class HatKid(GameSprite):
             self.rect.top=tilesabove[0].rect.bottom
 
 
+    def control_left_collision(self,tilesleft):
+        has_tiles_left=len(tilesleft)>0
+        if has_tiles_left and (self.is_moving_left() or self.is_stopped_x()):
+            self.x_speed=0
+            self.hitbox.rect.left=tilesleft[0].rect.right
 
+    def is_stopped_x(self):
+        return self.x_speed==0
 
     def update(self,map1):
         #update hitbox pos
         self.hitbox.rect.center=self.rect.center
-        tilesunder=self.tilesunder(map1)
+        tilesunder= self.tilesunder(map1)
         tilesabove= self.tilesabove(map1)
+
+
+
         has_tiles_under= len(tilesunder)> 0
         has_tiles_above= len(tilesabove)> 0
         
@@ -198,12 +213,16 @@ class HatKid(GameSprite):
         self.set_hasdived(has_tiles_under)
 
         self.control_ground_collision(tilesunder)
-        self.control_ceiling_collision(tilesabove)
+        self.control_ceiling_collision(tilesabove) 
 
-        # and pygame.key.get_pressed()[pygame.K_a]
-        if (tilesleft:= self.tilesleft(map1)) and self.x_speed <= 0:
-            self.x_speed=0
-            self.hitbox.rect.left=tilesleft[0].rect.right
+        tilesright= self.tilesright(map1)
+        tilesleft=  self.tilesleft(map1)
+        self.control_left_collision(tilesleft)
+
+
+
+
+
 
             
         if (tilesright:= self.tilesright(map1)) and self.x_speed >= 0:
