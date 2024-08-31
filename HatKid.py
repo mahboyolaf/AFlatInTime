@@ -166,7 +166,11 @@ class HatKid(GameSprite):
     def set_hasdived(self,has_tiles_under):
         if has_tiles_under:
             self.has_dived=False
-
+    def control_ground_collision(self,tilesunder):
+        has_tiles_under=len(tilesunder)>0
+        if has_tiles_under and self.is_moving_downward():
+                self.hitbox.rect.bottom=tilesunder[0].rect.top
+                self.rect.bottom=tilesunder[0].rect.top
 
     def update(self,map1):
         #update hitbox pos
@@ -175,6 +179,7 @@ class HatKid(GameSprite):
         tilesabove= self.tilesabove(map1)
         has_tiles_under= len(tilesunder)> 0
         has_tiles_above= len(tilesabove)> 0
+        
         self.set_y_speed(has_tiles_under,tilesabove)
         self.set_can_jump(has_tiles_above)
         self.set_jumpcount(has_tiles_under)
@@ -182,11 +187,9 @@ class HatKid(GameSprite):
         self.set_isonground(has_tiles_under)
         self.set_has_jumped_in_air(has_tiles_under)
         self.set_hasdived(has_tiles_under)
+        
+        self.control_ground_collision(tilesunder)
 
-        #if on ground does this
-        if has_tiles_under and self.is_moving_downward():
-                self.hitbox.rect.bottom=tilesunder[0].rect.top
-                self.rect.bottom=tilesunder[0].rect.top
 
         if tilesabove and self.is_moving_upwards():
             self.hitbox.rect.top=tilesabove[0].rect.bottom
