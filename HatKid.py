@@ -183,18 +183,38 @@ class HatKid(GameSprite):
             self.hitbox.rect.top=tilesabove[0].rect.bottom
             self.rect.top=tilesabove[0].rect.bottom
 
-
     def control_left_collision(self,tilesleft):
         has_tiles_left=len(tilesleft)>0
         if has_tiles_left and (self.is_moving_left() or self.is_stopped_x()):
-            self.x_speed=0
-            self.hitbox.rect.left=tilesleft[0].rect.right
+            self.stop_x()
+            self.snap_to_left_tile(tilesleft)
+        if self.ispastleft() and self.is_moving_left():
+            self.stop_x()
+            self.snap_to_left_edge()
 
     def control_right_collision(self,tilesright):
         has_tiles_right=len(tilesright)>0
         if has_tiles_right and (self.is_moving_right() or self.is_stopped_x()):
-            self.x_speed=0
-            self.hitbox.rect.right=tilesright[0].rect.left
+            self.stop_x()
+            self.snap_to_right_tile(tilesright)
+        if self.ispastright() and self.is_moving_right():
+            self.stop_x()
+            self.snap_to_right_edge()
+
+    def snap_to_left_edge(self):
+        self.hitbox.left=0
+
+    def snap_to_right_edge(self):
+        self.hitbox.right=SCREEN_WIDTH
+
+    def snap_to_right_tile(self,tilesright):
+        self.hitbox.rect.right=tilesright[0].rect.left
+
+    def snap_to_left_tile(self,tilesleft):
+        self.hitbox.rect.left=tilesleft[0].rect.right
+
+    def stop_x(self):
+        self.x_speed=0
 
     def is_stopped_x(self):
         return self.x_speed==0
@@ -279,18 +299,6 @@ class HatKid(GameSprite):
             if self.jump.count <2 and self.canjump:
                 self.jump.start()
             
-        
-        
-        if(self.ispastleft()):
-            if 0>=self.x_speed:
-                self.x_speed=0
-                #self.hitbox.left=0
-
-        if(self.ispastright()):
-            if 0<=self.x_speed:
-                self.x_speed=0
-                #self.hitbox.rect.right=SCREEN_WIDTH
-                #print(self.hitbox.right,self.hitbox.x)
         if(self.ispastbottom()):
             self.rect.x,self.rect.y=100,100
 
