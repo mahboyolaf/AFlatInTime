@@ -12,6 +12,9 @@ class Hitbox(GameSprite):
     def draw(self):
         pygame.draw.rect(self.screen, Hitbox.colour,self.rect)
 
+
+
+# BUG if the atoms align you can clip through corners and sides
 class HatKid(GameSprite):
     def __init__(self,x,y,screen,map):
         hatkid_filename = "sprite/HatKid/walk/walk1.png"
@@ -174,14 +177,12 @@ class HatKid(GameSprite):
     def control_ground_collision(self,tilesunder):
         has_tiles_under=len(tilesunder)>0
         if has_tiles_under and self.is_moving_downward():
-                self.hitbox.rect.bottom=tilesunder[0].rect.top
-                self.rect.bottom=tilesunder[0].rect.top
+                self.snap_to_ground_tile(tilesunder)
 
     def control_ceiling_collision(self,tilesabove):
         has_tiles_above=len(tilesabove)>0
         if has_tiles_above and self.is_moving_upwards():
-            self.hitbox.rect.top=tilesabove[0].rect.bottom
-            self.rect.top=tilesabove[0].rect.bottom
+            self.snap_to_celing_tile(tilesabove)
 
     def control_left_collision(self,tilesleft):
         has_tiles_left=len(tilesleft)>0
@@ -212,6 +213,17 @@ class HatKid(GameSprite):
 
     def snap_to_left_tile(self,tilesleft):
         self.hitbox.rect.left=tilesleft[0].rect.right
+
+    def snap_to_ground_tile(self,tilesunder):
+            # NOTE why both hitbox and sprite?
+                self.hitbox.rect.bottom=tilesunder[0].rect.top
+                self.rect.bottom=tilesunder[0].rect.top
+    
+    def snap_to_celing_tile(self,tilesabove):
+            # NOTE why both hitbox and sprite?
+            self.hitbox.rect.top=tilesabove[0].rect.bottom
+            self.rect.top=tilesabove[0].rect.bottom
+
 
     def stop_x(self):
         self.x_speed=0
