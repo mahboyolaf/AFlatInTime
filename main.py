@@ -21,34 +21,32 @@ screen=pygame.display.set_mode((constants.SCREEN_WIDTH,constants.SCREEN_HEIGHT))
 tilesetdir="maps/tilesets/tilesheets/"
 mapfiletmx= "maps/testmap.tmx"
 map1=LevelMap(mapfile=mapfiletmx, tilesetdir=tilesetdir, screen=screen)
+RIGHTKEY=pygame.K_d
+LEFTKEY=pygame.K_a
+UPKEY=pygame.K_w
+SPACEKEY=pygame.K_SPACE
+
+
+def is_pressing_both_directions(keyspressedlist):
+    return keyspressedlist[RIGHTKEY] and keyspressedlist[LEFTKEY]
 
 def check_for_keyboard_events(hatkid):
     keyspressedlist=pygame.key.get_pressed()
-    if keyspressedlist[pygame.K_d] and keyspressedlist[pygame.K_a]:
-        #stop walking if moving in both directions
-        hatkid.walk.stop()
-    elif keyspressedlist[pygame.K_d] and not hatkid.dive.divestatus:
+
+
+    if keyspressedlist[RIGHTKEY] and not hatkid.dive.divestatus and not is_pressing_both_directions(keyspressedlist):
         #not diving and moving to the right
-        if hatkid.direction == Movement.Direction.LEFT:
-            hatkid.walk.stop()
-        elif hatkid.is_moving_left_fast():
-            hatkid.walk.stop()
-        hatkid.walk.set_direction(Movement.Direction.RIGHT)
-        hatkid.walk.start()
-    elif keyspressedlist[pygame.K_a] and not hatkid.dive.divestatus:
-        if hatkid.direction == Movement.Direction.RIGHT:
-            hatkid.walk.stop()
-        elif hatkid.is_moving_right_fast():
-            hatkid.walk.stop()  
-        hatkid.walk.set_direction(Movement.Direction.LEFT)
-        hatkid.walk.start()
+        hatkid.walk_right()
+    elif keyspressedlist[LEFTKEY] and not hatkid.dive.divestatus and not is_pressing_both_directions(keyspressedlist):
+        hatkid.walk_left()
     else:
         hatkid.walk.stop()
 
-    if keyspressedlist[pygame.K_w] or keyspressedlist[pygame.K_SPACE]:
+    if keyspressedlist[UPKEY] or keyspressedlist[SPACEKEY]:
         hatkid.dive.cancel()
         if hatkid.jump.count <2 and hatkid.canjump:
             hatkid.jump.start()
+
 
 
 

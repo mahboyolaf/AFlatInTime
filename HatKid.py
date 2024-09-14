@@ -231,6 +231,26 @@ class HatKid(GameSprite):
     def is_stopped_x(self):
         return self.x_speed==0
 
+    def is_direction_left(self):
+        return self.direction == Movement.Direction.LEFT
+
+    def is_direction_right(self):
+        return self.direction == Movement.Direction.RIGHT
+
+    def walk_right(self):
+        if self.is_direction_left() or self.is_moving_left_fast():
+            self.walk.stop()
+        self.walk.set_direction(Movement.Direction.RIGHT)
+        self.walk.start()
+
+    def walk_left(self):
+        if self.is_direction_right() or self.is_moving_right_fast():
+            self.walk.stop()
+        self.walk.set_direction(Movement.Direction.LEFT)
+        self.walk.start()
+
+
+
     def update(self,map1):
         #update hitbox pos
         self.hitbox.rect.center=self.rect.center
