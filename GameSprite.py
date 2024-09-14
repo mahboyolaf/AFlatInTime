@@ -1,6 +1,7 @@
 import pygame
+from constants import *
 class GameSprite(pygame.sprite.Sprite):
-    def __init__(self,x,y,filename=None,screen=None,size=(32,64)):
+    def __init__(self,x,y,filename=None,screen=None,size=(TILE_SIZE/2,TILE_SIZE)):
 
         pygame.sprite.Sprite.__init__(self)
         self.screen=screen
