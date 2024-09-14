@@ -25,6 +25,7 @@ RIGHTKEY=pygame.K_d
 LEFTKEY=pygame.K_a
 UPKEY=pygame.K_w
 SPACEKEY=pygame.K_SPACE
+DIVEKEY=pygame.K_LCTRL
 
 
 def is_pressing_both_directions(keyspressedlist):
@@ -34,15 +35,44 @@ def check_for_keyboard_events(hatkid):
     keyspressedlist=pygame.key.get_pressed()
 
 
+
+    # if not hatkid.dive.ctrlpaststatus and keyspressedlist[DIVEKEY] and hatkid.dive.divestatus:
+    #     hatkid.dive.divestatus= False
+    #     hatkid.dive.cancel()
+    #     print ("start dive cancel")
+    # elif hatkid.dive.divestatus:
+    #     hatkid.dive.start()
+    #     print ("continue dive")
+    #     hatkid.current_frame=hatkid.diveright[0]
+
+    if not hatkid.dive.ctrlpaststatus and keyspressedlist[DIVEKEY] and not hatkid.dive.divestatus:
+        hatkid.dive.divestatus= True
+        hatkid.dive.start()
+        hatkid.dive.load("sprite/HatKid/dive",Movement.Direction.RIGHT)
+        hatkid.current_frame=hatkid.diveright[0]
+        print ("start dive")
+
+    # elif not hatkid.dive.ctrlpaststatus and not keyspressedlist[DIVEKEY] and not hatkid.dive.divestatus:
+    #     hatkid.dive.load("sprite/HatKid/dive",Movement.Direction.RIGHT)
+    #     print ("no input")
+
+    hatkid.dive.ctrlpaststatus=keyspressedlist[DIVEKEY]
+            
+
+
+
+
+
+
     if keyspressedlist[RIGHTKEY] and not hatkid.dive.divestatus and not is_pressing_both_directions(keyspressedlist):
         #not diving and moving to the right
         hatkid.walk_right()
     elif keyspressedlist[LEFTKEY] and not hatkid.dive.divestatus and not is_pressing_both_directions(keyspressedlist):
         hatkid.walk_left()
-    else:
+    elif not hatkid.dive.divestatus:
         hatkid.walk.stop()
 
-    if keyspressedlist[UPKEY] or keyspressedlist[SPACEKEY]:
+    if (keyspressedlist[UPKEY] or keyspressedlist[SPACEKEY]) and not hatkid.dive.divestatus:
         hatkid.dive.cancel()
         if hatkid.jump.count <2 and hatkid.canjump:
             hatkid.jump.start()

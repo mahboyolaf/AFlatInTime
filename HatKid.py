@@ -279,33 +279,6 @@ class HatKid(GameSprite):
         self.control_right_collision(tilesright)
         
 
-        keyspressedlist=pygame.key.get_pressed()
-
-        if self.dive.divestatus:
-            if not self.dive.ctrlpaststatus and pygame.key.get_pressed()[pygame.K_LCTRL]:
-                self.dive.divestatus= False
-                self.dive.cancel()
-                print ("start dive cancel")
-                pass
-            else:
-                self.dive.start()
-                print ("continue dive")
-                self.current_frame=self.diveright[0]
-                pass
-        else:
-            if not self.dive.ctrlpaststatus and pygame.key.get_pressed()[pygame.K_LCTRL]:
-                self.dive.divestatus= True
-                self.dive.start()
-                self.dive.load("sprite/HatKid/dive",Movement.Direction.RIGHT)
-                self.current_frame=self.diveright[0]
-                print ("start dive")
-                pass
-            elif not self.dive.ctrlpaststatus and not pygame.key.get_pressed()[pygame.K_LCTRL]:
-                self.dive.load("sprite/HatKid/dive",Movement.Direction.RIGHT)
-                print ("no input")
-                pass
-        self.dive.ctrlpaststatus=pygame.key.get_pressed()[pygame.K_LCTRL]
-            
         if(self.ispastbottom()):
             self.rect.x,self.rect.y=100,100
 
