@@ -73,6 +73,25 @@ class HatKid(GameSprite):
             climbs.append(climb)
         return tuple(climbs)    
 
+    def dive_ground_right(self):
+        print("right ground dive")
+        self.has_dived=True
+        if self.is_on_ground:
+            self.decelerate_x(DIVEDECELERATE)
+        else:
+            self.decelerate_x(0.98)
+        if self.y_speed <= MAXYSPEED:
+            self.y_speed -=0.1
+        # if self.has_tiles_under and self.is_moving_downward():
+        #     self.y_speed=0
+        # if self.has_tiles_above and self.is_moving_upwards():
+        #     self.y_speed=0
+
+    def dive_ground_left(self):
+        print("left ground dive")
+        self.x_speed=-DIVESPEED
+        self.rect.y-=DIVEHOPHEIGHT
+        self.has_dived=True
 
     #def dive(self):
         # if self.has_dived==False:
@@ -120,7 +139,14 @@ class HatKid(GameSprite):
             self.y_speed=0
         if has_tiles_above and self.is_moving_upwards():
             self.y_speed=0
-    
+
+    def set_x_speed(self,xspeed):
+        self.x_speed=xspeed
+        
+
+
+
+
     def is_moving_downward(self):
         return self.y_speed >= 0
     
@@ -236,7 +262,12 @@ class HatKid(GameSprite):
 
     def is_direction_right(self):
         return self.direction == Movement.Direction.RIGHT
-
+    
+    def get_x_movement_direction(self):
+        if self.is_direction_left():
+            return(-1)
+        if self.is_direction_right():
+            return(1)
     def walk_right(self):
         if self.is_direction_left() or self.is_moving_left_fast():
             self.walk.stop()
@@ -248,6 +279,12 @@ class HatKid(GameSprite):
             self.walk.stop()
         self.walk.set_direction(Movement.Direction.LEFT)
         self.walk.start()
+    
+    def decelerate_x(self,decelerationrate):
+        if abs(self.x_speed)> 0.1:
+            self.x_speed *= decelerationrate
+        else:
+            self.x_speed=0
 
 
 
@@ -277,18 +314,23 @@ class HatKid(GameSprite):
         tilesleft=  self.tilesleft(map1)
         self.control_left_collision(tilesleft)
         self.control_right_collision(tilesright)
-        
+
+        self.set_xpos()
+        self.set_ypos()
+
 
         if(self.ispastbottom()):
             self.rect.x,self.rect.y=100,100
 
 #check 1,2,3,4,5 but with y_speed and makes it not over shoot
-            
 
-        self.rect.x+=self.x_speed
-        self.rect.y+=self.y_speed
 
+    def set_xpos(self):
+        self.rect.x+=self.x_speed  
         self.hitbox.rect.x+=self.x_speed
+
+    def set_ypos(self):
+        self.rect.y+=self.y_speed
         self.hitbox.rect.y+=self.y_speed
 
     def tilesunder(self,map):

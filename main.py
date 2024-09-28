@@ -44,14 +44,30 @@ def check_for_keyboard_events(hatkid):
     #     hatkid.dive.start()
     #     print ("continue dive")
     #     hatkid.current_frame=hatkid.diveright[0]
-
-    if not hatkid.dive.ctrlpaststatus and keyspressedlist[DIVEKEY] and not hatkid.dive.divestatus:
+    if hatkid.dive.divestatus:
+        hatkid.dive_ground_right()
+        
+    elif not hatkid.dive.ctrlpaststatus and keyspressedlist[DIVEKEY] and not hatkid.dive.divestatus:
         hatkid.dive.divestatus= True
         hatkid.dive.start()
         hatkid.dive.load("sprite/HatKid/dive",Movement.Direction.RIGHT)
         hatkid.current_frame=hatkid.diveright[0]
         print ("start dive")
+        hatkid.set_x_speed(DIVESPEED*hatkid.get_x_movement_direction())
+        hatkid.rect.y-=DIVEHOPHEIGHT
+    # elif hatkid.dive.divestatus and keyspressedlist[RIGHTKEY] and not is_pressing_both_directions(keyspressedlist) and not hatkid.is_stopped_x():
+    #     hatkid.dive_ground_right()
 
+
+    # elif hatkid.dive.divestatus and keyspressedlist[LEFTKEY] and not is_pressing_both_directions(keyspressedlist):
+    #     hatkid.dive_ground_left()
+    # elif not hatkid.dive.divestatus:
+    #     hatkid.walk.stop()
+
+    
+    elif hatkid.dive.divestatus and hatkid.is_on_ground:
+        hatkid.decelerate_x(DIVEDECELERATE)
+        
     # elif not hatkid.dive.ctrlpaststatus and not keyspressedlist[DIVEKEY] and not hatkid.dive.divestatus:
     #     hatkid.dive.load("sprite/HatKid/dive",Movement.Direction.RIGHT)
     #     print ("no input")
