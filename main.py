@@ -39,6 +39,10 @@ def input_cancel_dive(hatkid,keyspressedlist):
     return (keyspressedlist[UPKEY] or keyspressedlist[SPACEKEY] or keyspressedlist[DIVEKEY]) and hatkid.dive.divestatus
 def input_continue_dive(hatkid,keyspressedlist):
     return hatkid.dive.divestatus and not (keyspressedlist[UPKEY] or keyspressedlist[SPACEKEY] or keyspressedlist[DIVEKEY])
+
+def input_jump(hatkid,keyspressedlist):
+    return (keyspressedlist[UPKEY] or keyspressedlist[SPACEKEY]) and not hatkid.dive.divestatus and hatkid.canjump == True
+
 def check_for_keyboard_events(hatkid):
     keyspressedlist=pygame.key.get_pressed()
 
@@ -57,6 +61,7 @@ def check_for_keyboard_events(hatkid):
         hatkid.dive.divestatus= True
 
         hatkid.dive.start()
+        hatkid.divejumplock = True
         hatkid.dive.load("sprite/HatKid/dive",Movement.Direction.RIGHT)
         hatkid.current_frame=hatkid.diveright[0]
         print ("start dive")
@@ -102,8 +107,8 @@ def check_for_keyboard_events(hatkid):
     elif not hatkid.dive.divestatus:
         hatkid.walk.stop()
 
-    if (keyspressedlist[UPKEY] or keyspressedlist[SPACEKEY]) and not hatkid.dive.divestatus:
-        hatkid.dive.cancel()
+    if input_jump(hatkid,keyspressedlist):
+        # hatkid.dive.cancel()
         if hatkid.jump.count <2 and hatkid.canjump:
             hatkid.jump.start()
 
@@ -135,3 +140,7 @@ while game:
     for event in (pygame.event.get()):
         if (pygame.KEYDOWN == event.type and event.key == pygame.K_ESCAPE) or event.type == pygame.QUIT:
                 game=False 
+        elif pygame.KEYDOWN == event.type and (event.key == DIVEKEY or event.key == SPACEKEY or event.key == UPKEY):
+            if hatkid.dive.divestatus == True:
+                print("dive stopped")
+                hatkid.dive.cancel()

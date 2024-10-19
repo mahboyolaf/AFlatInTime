@@ -42,6 +42,8 @@ class HatKid(GameSprite):
         self.has_jumped_in_air= False
         self.y_speed=0
         self.canjump= True
+        self.divejumplock= False
+
 
     def load_idle(self,spritedir,direction):
         idles=[]
@@ -164,10 +166,11 @@ class HatKid(GameSprite):
         return self.x_speed <0
 
     def set_can_jump(self,has_tiles_above):
-        if has_tiles_above and self.is_moving_upwards():
+        if has_tiles_above and self.is_moving_upwards() or self.divejumplock:
             self.canjump=False
-        if not HatKid.is_press_jump_key():
+        elif not HatKid.is_press_jump_key():
             self.canjump=True
+        
 
     def is_press_jump_key():
         keyspressedlist=pygame.key.get_pressed()        
@@ -306,6 +309,7 @@ class HatKid(GameSprite):
         self.set_isonground(has_tiles_under)
         self.set_has_jumped_in_air(has_tiles_under)
         self.set_hasdived(has_tiles_under)
+        self.divejumplock= self.divejumplock and not self.is_on_ground
 
         self.control_ground_collision(tilesunder)
         self.control_ceiling_collision(tilesabove) 
