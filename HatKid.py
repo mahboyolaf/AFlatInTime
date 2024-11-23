@@ -150,10 +150,10 @@ class HatKid(GameSprite):
 
 
     def is_moving_downward(self):
-        return self.y_speed >= 0
+        return self.y_speed > 0
     
     def is_moving_upwards(self):
-        return self.y_speed <= 0
+        return self.y_speed < 0
     
     def is_moving_right_fast(self):
         return self.x_speed >0.1
@@ -218,7 +218,7 @@ class HatKid(GameSprite):
         if has_tiles_left and (self.is_moving_left() or self.is_stopped_x()):
             self.stop_x()
             self.snap_to_left_tile(tilesleft)
-        if self.ispastleft() and self.is_moving_left():
+        elif self.ispastleft() and self.is_moving_left():
             self.stop_x()
             self.snap_to_left_edge()
 
@@ -227,7 +227,7 @@ class HatKid(GameSprite):
         if has_tiles_right and (self.is_moving_right() or self.is_stopped_x()):
             self.stop_x()
             self.snap_to_right_tile(tilesright)
-        if self.ispastright() and self.is_moving_right():
+        elif self.ispastright() and self.is_moving_right():
             self.stop_x()
             self.snap_to_right_edge()
 
@@ -324,7 +324,8 @@ class HatKid(GameSprite):
 
 
         if(self.ispastbottom()):
-            self.rect.x,self.rect.y=100,100
+            self.rect.x,self.rect.y=TILE_SIZE*4-16,TILE_SIZE*5
+            self.x_speed,self.y_speed=-1,2
 
 #check 1,2,3,4,5 but with y_speed and makes it not over shoot
 
