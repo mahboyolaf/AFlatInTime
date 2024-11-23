@@ -365,19 +365,10 @@ class HatKid(GameSprite):
         return hitlist   
     
     def ispastleft(self):
-        checkahead=MAXXSPEED
-        self.rect.move_ip([0,-checkahead])
-        #check=self.rect.x <= 0
-        check=self.hitbox.rect.left <= 0
-        self.rect.move_ip([0,checkahead])
-        return check
+        return self.hitbox.rect.left <= 0
 
     def ispastright(self):
-        self.rect.move_ip([0,self.x_speed])
-        #check=self.rect.x+TILE_SIZE >= WIDTHINTILES*TILE_SIZE
-        check=self.hitbox.rect.right >= WIDTHINTILES*TILE_SIZE
-        self.rect.move_ip([0,-self.x_speed])
-        return check
+        return self.hitbox.rect.right >= WIDTHINTILES*TILE_SIZE
 
 
     def ispastbottom(self):
