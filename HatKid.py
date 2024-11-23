@@ -205,7 +205,7 @@ class HatKid(GameSprite):
             self.has_dived=False
     def control_ground_collision(self,tilesunder):
         has_tiles_under=len(tilesunder)>0
-        if has_tiles_under and self.is_moving_downward():
+        if has_tiles_under and (self.is_moving_downward() or self.is_stopped_y()):
                 self.snap_to_ground_tile(tilesunder)
 
     def control_ceiling_collision(self,tilesabove):
@@ -259,6 +259,8 @@ class HatKid(GameSprite):
 
     def is_stopped_x(self):
         return self.x_speed==0
+    def is_stopped_y(self):
+        return self.y_speed==0
 
     def is_direction_left(self):
         return self.direction == Movement.Direction.LEFT
