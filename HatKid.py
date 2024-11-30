@@ -212,27 +212,30 @@ class HatKid(GameSprite):
         has_tiles_above=len(tilesabove)>0
         if has_tiles_above and self.is_moving_upwards():
             self.snap_to_celing_tile(tilesabove)
+            print("something",has_tiles_above and self.is_moving_upwards())
+
 
     def control_left_collision(self,tilesleft):
         has_tiles_left=len(tilesleft)>0
-        if has_tiles_left and (self.is_moving_left() or self.is_stopped_x()):
-            self.stop_x()
-            self.snap_to_left_tile(tilesleft)
-        elif self.ispastleft() and self.is_moving_left():
+        # if has_tiles_left and (self.is_moving_left() or self.is_stopped_x()):
+        #     self.stop_x()
+        #     self.snap_to_left_tile(tilesleft)
+        if self.ispastleft() and self.is_moving_left():
             self.stop_x()
             self.snap_to_left_edge()
 
     def control_right_collision(self,tilesright):
         has_tiles_right=len(tilesright)>0
-        if has_tiles_right and (self.is_moving_right() or self.is_stopped_x()):
-            self.stop_x()
-            self.snap_to_right_tile(tilesright)
-        elif self.ispastright() and self.is_moving_right():
+        # if has_tiles_right and (self.is_moving_right() or self.is_stopped_x()):
+        #     self.stop_x()
+        #     self.snap_to_right_tile(tilesright)
+        if self.ispastright() and self.is_moving_right():
             self.stop_x()
             self.snap_to_right_edge()
 
     def snap_to_left_edge(self):
         self.hitbox.left=0
+
 
     def snap_to_right_edge(self):
         self.hitbox.right=SCREEN_WIDTH
@@ -242,7 +245,7 @@ class HatKid(GameSprite):
 
     def snap_to_left_tile(self,tilesleft):
         self.hitbox.rect.left=tilesleft[0].rect.right
-
+        
     def snap_to_ground_tile(self,tilesunder):
             # NOTE why both hitbox and sprite?
                 self.hitbox.rect.bottom=tilesunder[0].rect.top
@@ -252,6 +255,7 @@ class HatKid(GameSprite):
             # NOTE why both hitbox and sprite?
             self.hitbox.rect.top=tilesabove[0].rect.bottom
             self.rect.top=tilesabove[0].rect.bottom
+            
 
 
     def stop_x(self):
@@ -325,6 +329,8 @@ class HatKid(GameSprite):
         self.set_ypos()
 
 
+
+
         if(self.ispastbottom()):
             self.rect.x,self.rect.y=TILE_SIZE*4-16,TILE_SIZE*5
             self.x_speed,self.y_speed=-1,2
@@ -349,11 +355,11 @@ class HatKid(GameSprite):
         return hitlist
     def tilesabove(self,map):
         """return a list of tiles above hat kid"""
-        #self.rect.move_ip([0,-(self.y_speed+1)])
-        self.hitbox.rect.move_ip([0,-1])
+        # self.rect.move_ip([0,-(self.y_speed+1)])
+        self.hitbox.rect.move_ip([0,-MAXYSPEED*0.65])
         hitlist=pygame.sprite.spritecollide(self.hitbox,map.tiles,False)
-        #self.rect.move_ip([0,self.y_speed+1])
-        self.hitbox.rect.move_ip([0,1])
+        # self.rect.move_ip([0,self.y_speed+1])
+        self.hitbox.rect.move_ip([0,MAXYSPEED*0.65])
         return hitlist    
     def tilesleft(self,map):
         """return a list of tiles above hat kid"""
