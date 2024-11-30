@@ -138,6 +138,12 @@ while game:
     #hitlist=pygame.sprite.spritecollide(hatkid,map1.tiles,False)
     check_for_keyboard_events(hatkid)
     for event in (pygame.event.get()):
+        if (pygame.KEYDOWN == event.type and event.key == pygame.K_r):
+            constants.FPS=2
+            print("FPS is at:",constants.FPS)
+        if (pygame.KEYDOWN == event.type and event.key == pygame.K_t):
+            constants.FPS=60
+            print("FPS is at:",constants.FPS)
         if (pygame.KEYDOWN == event.type and event.key == pygame.K_ESCAPE) or event.type == pygame.QUIT:
                 game=False 
         elif pygame.KEYDOWN == event.type and (event.key == DIVEKEY or event.key == SPACEKEY or event.key == UPKEY):
