@@ -4,3 +4,4 @@ main.spec
 __pycache__
 .vscode
 *.pyc
+venv/
