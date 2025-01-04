@@ -241,21 +241,25 @@ class HatKid(GameSprite):
         self.hitbox.right=SCREEN_WIDTH
 
     def snap_to_right_tile(self,tilesright):
+        print("snap to right")
         self.hitbox.rect.right=tilesright[0].rect.left
 
     def snap_to_left_tile(self,tilesleft):
+        print("snap to left")
         self.hitbox.rect.left=tilesleft[0].rect.right
         
     def snap_to_ground_tile(self,tilesunder):
-            # NOTE why both hitbox and sprite?
-                self.hitbox.rect.bottom=tilesunder[0].rect.top
-                self.rect.bottom=tilesunder[0].rect.top
+        # NOTE why both hitbox and sprite?
+        #print("snap to down")
+        self.hitbox.rect.bottom=tilesunder[0].rect.top
+        self.rect.bottom=tilesunder[0].rect.top
     
     def snap_to_celing_tile(self,tilesabove):
-            # NOTE why both hitbox and sprite?
-            self.hitbox.rect.top=tilesabove[0].rect.bottom
-            self.rect.top=tilesabove[0].rect.bottom
-            
+        # NOTE why both hitbox and sprite?
+        print("snap to up")
+        self.hitbox.rect.top=tilesabove[0].rect.bottom
+        self.rect.top=tilesabove[0].rect.bottom
+        
 
 
     def stop_x(self):
@@ -322,6 +326,16 @@ class HatKid(GameSprite):
 
         tilesright= self.tilesright(map1)
         tilesleft=  self.tilesleft(map1)
+        # FIXME teleports to thhe top tile when going through wall
+        for tile in tilesunder:
+            print (len(tilesabove),len(tilesright),len(tilesunder),len(tilesleft))
+            if tile in tilesright:
+                print("tile in tiles right")
+            if tile in tilesleft:
+                print("tile in tiles left")
+            if tile in tilesabove:
+                print("tile in tiles above")
+                tilesunder.remove(tile)
         self.control_left_collision(tilesleft)
         self.control_right_collision(tilesright)
 
